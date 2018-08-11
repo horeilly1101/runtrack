@@ -8,4 +8,4 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from runtrack_app import routes
+from runtrack_app import routes, models
