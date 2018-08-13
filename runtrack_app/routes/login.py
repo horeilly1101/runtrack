@@ -2,12 +2,6 @@ from runtrack_app import app
 from flask import render_template, url_for, request
 from .forms import LoginForm
 
-@app.route("/")
-@app.route("/index")
-def index():
-	return render_template("login.html")
-
-@app.route("/login", methods=["GET", "POST"])
 def login():
 	if current_user.is_authenticated:
 		return redirect(url_for('index'))
@@ -20,7 +14,3 @@ def login():
 		login_user(user, remember=form.remember_me.data)
 		return redirect(url_for('index'))
 	return render_template("login.html", form=form)
-
-# @app.route("/register", methods=["GET", "POST"])
-# def register():
-# 	pass
