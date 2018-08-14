@@ -19,4 +19,4 @@ How to run on Mac OS:
   - `pip install -r requirements.txt`
   - `export FLASK_APP=runtrack.py`
   - `flask db upgrade`
-- Go to the url `localhost:5000` in your preferred browser.
+- Open the url `localhost:5000` in your preferred browser.
