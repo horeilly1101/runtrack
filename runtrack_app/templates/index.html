@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block styles %}
+	{{ super() }}
+	<!-- Custom styles for this template -->
+	<link href="{{ url_for('static', filename='calendar.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block content %}
-	<a href="{{ url_for('logout') }}">Logout</a>
+	<h1 class="text-center">Hello, {{ current_user.name }}!</h1>
 {% endblock %}

@@ -25,6 +25,10 @@
 		{% endif %}
 		{% endwith %}
 
+		{% if navbar %}
+			{% include "_navbar.html" %}
+		{% endif %}
+
 		<main>
 			{% block content %}{% endblock %}
 		</main>
