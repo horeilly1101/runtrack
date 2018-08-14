@@ -13,10 +13,10 @@
             <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item {% block runs_active %}{% endblock %}">
-            <a class="nav-link" href="{{ url_for('runs', name=current_user.name) }}">Your Runs</a>
+            <a class="nav-link" href="{{ url_for('runs') }}">Your Runs</a>
           </li>
           <li class="nav-item {% block add_active %}{% endblock %}">
-            <a class="nav-link" href="#">Add a Run</a>
+            <a class="nav-link" href="{{ url_for('add_run') }}">Add a Run</a>
           </li>
         </ul>
           <ul class="navbar-nav">
