@@ -15,8 +15,8 @@ How to run on Mac OS:
 - Run a local PostgreSQL database with username: `postgres`, password: `password`, and port: `5555`.  (Of course, you can edit `runtrack/config.py` to change any of these details.)
 - Navigate to the `runtrack` directory in your Terminal and run the following commands:
 ```
-  - `python3 -m venv venv`
-  - `. venv/bin/activate`
+$ python3 -m venv venv
+$ . venv/bin/activate
   - `pip install -r requirements.txt`
   - `export FLASK_APP=runtrack.py`
   - `flask db upgrade`
