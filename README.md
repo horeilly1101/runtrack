@@ -12,7 +12,7 @@ It will use:
 How to run on Mac OS:
 - Clone the repository.
 - Make sure that Python 3 and pip are installed.
-- Run a local PostgreSQL database with username: `postgres`, password: `password`, and port: `5555`.  (Of course, you could also edit `runtrack/config.py` to change any of these details.)
+- Run a local PostgreSQL database with username: `postgres`, password: `password`, and port: `5555`.  (Of course, you can edit `runtrack/config.py` to change any of these details.)
 - Navigate to the `runtrack` directory in your Terminal and run the following commands:
   - `python3 -m venv venv`
   - `. venv/bin/activate`
