@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block styles %}
+	{{ super() }}
+	<!-- Custom styles for this template -->
+	<link href="{{ url_for('static', filename='login.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+	    <form class="form-signin text-center" action="" method="post">
+        {{ form.hidden_tag() }}
+
+        	<h1 class="mb-3 font-weight-normal text-success">runtrack</h1>
+            <h1 class="h3 mb-3 font-weight-normal">Create an account</h1>
+
+            {{ form.name.label(class="sr-only") }}
+            {{ form.name(size=32, placeholder="Name", class="form-control form-top") }}
+            {% for error in form.name.errors %}
+            	<span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+            {{ form.email.label(class="sr-only") }}
+            {{ form.email(size=64, placeholder="Email address", class="form-control form-middle", type="email") }}
+            {% for error in form.email.errors %}
+            	<span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+            {{ form.password.label(class="sr-only") }}
+            {{ form.password(size=32, placeholder="Password", class="form-control form-middle", type="password") }}
+            {% for error in form.password.errors %}
+            	<span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+            {{ form.repeat_password.label(class="sr-only") }}
+            {{ form.repeat_password(size=32, placeholder="Repeat password", class="form-control form-bottom", type="password") }}
+            {% for error in form.repeat_password.errors %}
+            	<span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+            		<!-- Remember me -->
+			<div class="checkbox mb-3">
+				{{ form.remember_me() }} {{ form.remember_me.label }}
+			</div>
+			<button class="btn btn-lg btn-success btn-block" type="submit">Register</button>
+			<br>
+			<p>Already have an account? <a href="{{ url_for('login') }}">Login.</a></p>
+        </form>
+{% endblock %}
