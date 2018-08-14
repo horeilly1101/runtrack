@@ -1,5 +1,8 @@
-from runtrack_app import app
-from flask import render_template, url_for, request
+from runtrack_app import app, db
+from flask import render_template, url_for, request, flash, redirect
+from flask_login import login_user, current_user, login_required
+from runtrack_app.forms import RegistrationForm
+from runtrack_app.models import User
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -13,7 +16,7 @@ def register():
 		db.session.add(user)
 		db.session.commit()
 
-		login_user(user)
+		login_user(user, remember=form.remember_me.data)
 		flash("Welcome to runtrack!")
 		return redirect(url_for('index'))
 
