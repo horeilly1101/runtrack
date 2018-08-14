@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+    <main>
 	    <form class="form-signin text-center" action="" method="post">
         {{ form.hidden_tag() }}
 
@@ -45,4 +46,5 @@
 			<br>
 			<p>Already have an account? <a href="{{ url_for('login') }}">Log in.</a></p>
         </form>
+    </main>
 {% endblock %}

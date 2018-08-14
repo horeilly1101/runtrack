@@ -6,8 +6,8 @@
 	<link href="{{ url_for('static', filename='calendar.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
-{% block home_login %}active{% endblock %}
+{% block home_active %}active{% endblock %}
 
-{% block content %}
+{% block app_content %}
 	<h1 class="text-center">Hello, {{ current_user.name }}!</h1>
 {% endblock %}
