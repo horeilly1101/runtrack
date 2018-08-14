@@ -17,9 +17,9 @@ How to run on Mac OS:
 ```
 $ python3 -m venv venv
 $ . venv/bin/activate
-  - `pip install -r requirements.txt`
-  - `export FLASK_APP=runtrack.py`
-  - `flask db upgrade`
-  - `flask run`
+$ pip install -r requirements.txt
+$ export FLASK_APP=runtrack.py
+$ flask db upgrade
+$ flask run
  ```
 - Open the url `localhost:5000` in your preferred browser.
