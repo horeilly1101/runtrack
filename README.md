@@ -10,5 +10,6 @@ It will use:
 - Bootstrap4 to handle the front end
 
 How to run on Mac OS:
-- Either run a local PostgreSQL database with username: "postgres", password: "password", and port: 5555, or edit runtrack/config.py to connect to the database of your choosing.
+- Run a local PostgreSQL database with username: "postgres", password: "password", and port: 5555.  (Of course, you could also edit `runtrack/config.py` to change any of these details.)
+- Navigate to the `runtrack` directory in your Terminal.
 - 
