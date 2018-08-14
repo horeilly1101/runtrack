@@ -1,10 +1,12 @@
-{% extends "base.html" %}
+{% extends "navbar.html" %}
 
 {% block styles %}
 	{{ super() }}
 	<!-- Custom styles for this template -->
 	<link href="{{ url_for('static', filename='calendar.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
+
+{% block home_login %}active{% endblock %}
 
 {% block content %}
 	<h1 class="text-center">Hello, {{ current_user.name }}!</h1>

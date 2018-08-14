@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block navbar %}
     <nav class="navbar navbar-expand-md navbar-dark bg-success">
       <a class="navbar-brand font-weight-normal" href="#">runtrack</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
@@ -6,13 +9,13 @@
 
       <div class="collapse navbar-collapse" id="navbarsExample04">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item {% block home_active %}{% endblock %}">
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {% block run_active %}{% endblock %}">
             <a class="nav-link" href="#">Your Runs</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {% block add_active %}{% endblock %}">
             <a class="nav-link" href="#">Add a Run</a>
           </li>
         </ul>
@@ -23,3 +26,8 @@
           </ul>
       </div>
     </nav>
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+{% endblock %}

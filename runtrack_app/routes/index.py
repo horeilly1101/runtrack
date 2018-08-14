@@ -6,5 +6,4 @@ from flask_login import current_user, login_required
 @app.route("/index")
 @login_required
 def index():
-	return render_template("index.html",
-		navbar=True)
+	return render_template("index.html")
