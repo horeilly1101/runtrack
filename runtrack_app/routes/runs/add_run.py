@@ -1,5 +1,5 @@
 from runtrack_app import app, db
-from flask import render_template, url_for, request, redirect
+from flask import render_template, url_for, request, redirect, flash
 from flask_login import current_user, login_required
 from runtrack_app.forms import AddRunForm
 from runtrack_app.models import Run
@@ -18,6 +18,7 @@ def add_run():
 		db.session.add(run)
 		db.session.commit()
 
+		flash('Your run has been added!')
 		return redirect('runs')
 	return render_template("runs/add_run.html",
 		form=form)
