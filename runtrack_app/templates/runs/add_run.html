@@ -11,7 +11,8 @@
 {% block add_active %}active{% endblock %}
 
 {% block app_content %}
-	<form method="form-signin post">
+	<form method="post" class="form-signin ">
+		{{ form.csrf_token }}
 		<div class="form-group">
 			<h1 class="mb-3 font-weight-normal text-success text-center">add run</h1>
 			{{ form.distance.label() }} (in miles)
