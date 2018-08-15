@@ -3,5 +3,46 @@
 {% block runs_active %}active{% endblock %}
 
 {% block app_content %}
-	<h1 class="text-center">This is where your runs will be displayed.</h1>
+
+	  <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">keep running</h1>
+          <blockquote class="blockquote mb-0 card-body">
+          	<p>“Now if you are going to win any battle you have to do one thing. You have to make the mind run the body. Never let the body tell the mind what to do. The body will always give up. It is always tired in the morning, noon and night. But the body is never tired if the mind is not tired.”</p>
+          	<small class="text-muted blockquote-footer">
+          		George S. Patton
+        	</small>
+          </blockquote>
+          <p><a class="btn btn-primary btn-lg" href="#" role="button">add a run</a></p>
+        </div>
+      </div>
+
+	<div class="container text-center">
+		{% for run in user_runs %}
+			{% if loop.index0 % 4 == 0 %}
+			<div class="card-deck">
+			{% endif %}
+			<div class="card">
+				<div class="card-body">
+					<h2 class="card-title">{{ run.distance }} mi</h2>
+					<p class="card-text text-primary">/7 mi</p>
+				</div>
+				<div class="card-footer" style="background-color: #E8ECEF">
+					<p class="card-text">{{ run.started_at }}</p>
+				</div>
+			</div>
+			{% if loop.index0 % 4 == 3 %}
+			</div>
+			<br>
+			{% elif loop.last %}
+			{% set remaining = 4 - (loop.length % 4) %}
+			{% for i in range(remaining) %}
+			<div class="card bg-white border-white">
+			</div>
+			{% endfor %}
+			</div>
+			{% endif %}
+		{% endfor %}
+	</div><br>
 {% endblock %}
