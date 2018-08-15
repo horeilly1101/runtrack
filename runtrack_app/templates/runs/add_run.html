@@ -1,7 +1,39 @@
 {% extends "navbar.html" %}
 
+{% block styles %}
+	{{ super() }}
+	<!-- Custom styles for this template -->
+	<link href="{{ url_for('static', filename='login.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block nav_styles %}style="margin-top: -60px; margin-bottom: 60px"{% endblock %}
+
 {% block add_active %}active{% endblock %}
 
 {% block app_content %}
-	<h1 class="text-center">This is where you will add runs.</h1>
+	<form method="form-signin post">
+		<div class="form-group">
+			<h1 class="mb-3 font-weight-normal text-success text-center">add run</h1>
+			{{ form.distance.label() }} (in miles)
+			{{ form.distance(size=32, class="form-control", type="number", step="0.1") }}
+			{% for error in form.distance.errors %}
+				<span style="color: red;">[{{ error }}]</span>
+			{% endfor %}
+		</div>
+		<div class="form-group">
+			<label>start date and time</label>
+			<div class="input-group">
+				{{ form.start_date(size=32, type="date", class="form-control col-7") }}
+				{{ form.start_time(size=32, type="time", class="form-control col-5") }}
+				{% for error in form.start_date.errors %}
+					<span style="color: red;">[{{ error }}]</span>
+				{% endfor %}
+				{% for error in form.start_time.errors %}
+					<span style="color: red;">[{{ error }}]</span>
+				{% endfor %}
+			</div>
+		</div>
+		<br>
+		<button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
+	</form>
 {% endblock %}
