@@ -3,11 +3,23 @@
 {% block styles %}
 	{{ super() }}
 	<!-- Custom styles for this template -->
-	<link href="{{ url_for('static', filename='calendar.css') }}" rel="stylesheet" type="text/css">
+	<link href="{{ url_for('static', filename='eggshell.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block home_active %}active{% endblock %}
 
 {% block app_content %}
-	<h1 class="text-center">Hello, {{ current_user.name }}!</h1>
+		  <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron" style="background-color: #f5f5f5">
+        <div class="container">
+          <h1 class="display-3">keep running, {{ current_user.name }}</h1>
+          <blockquote class="blockquote mb-0 card-body">
+          	<p>“Now if you are going to win any battle you have to do one thing. You have to make the mind run the body. Never let the body tell the mind what to do. The body will always give up. It is always tired in the morning, noon and night. But the body is never tired if the mind is not tired.”</p>
+          	<small class="text-muted blockquote-footer">
+          		George S. Patton
+        	</small>
+          </blockquote>
+          <p><a class="btn btn-primary btn-lg" href="{{ url_for('add_run') }}" role="button">add a run</a></p>
+        </div>
+      </div>
 {% endblock %}
