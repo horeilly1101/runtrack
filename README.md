@@ -7,7 +7,8 @@ It uses:
 - PostgreSQL to store data
 - SQL-Alchemy to interact with the database
 - Alembic to keep track of migrations
-- Bootstrap4 to handle the front end
+- Bootstrap4 to handle most of the front end
+- Chart.js to generate and display graphs
 
 How to run on Mac OS:
 - Clone the repository.
