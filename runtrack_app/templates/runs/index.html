@@ -4,15 +4,18 @@
 	{{ super() }}
 	<!-- Custom styles for this template -->
 	<link href="{{ url_for('static', filename='eggshell.css') }}" rel="stylesheet" type="text/css">
+
+	<!-- Chart js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 {% endblock %}
 
 {% block home_active %}active{% endblock %}
 
 {% block app_content %}
-		  <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div class="jumbotron" style="background-color: #f5f5f5">
+	<!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron" style="background-color: #f5f5f5; padding-top: 1em; padding-bottom: 0">
         <div class="container">
-          <h1 class="display-3">keep running, {{ current_user.name }}</h1>
+          <h1 class="display-3">keep running</h1>
           <blockquote class="blockquote mb-0 card-body">
           	<p>“Now if you are going to win any battle you have to do one thing. You have to make the mind run the body. Never let the body tell the mind what to do. The body will always give up. It is always tired in the morning, noon and night. But the body is never tired if the mind is not tired.”</p>
           	<small class="text-muted blockquote-footer">
@@ -22,4 +25,139 @@
           <p><a class="btn btn-primary btn-lg" href="{{ url_for('add_run') }}" role="button">add a run</a></p>
         </div>
       </div>
+
+<div class="container">
+	<div class="card-deck">
+		<div class="card" style="background-color: #f5f5f5;">
+			<div class="card-body">
+				<h2 class="card-title">last 4 weeks</h2>
+				<canvas id="myChart" width="600" height="400"></canvas>
+			</div>
+		</div>
+		<div class="card" style="background-color: #f5f5f5">
+			<div class="card-body">
+				<h2 class="card-title">last 4 weeks</h2>
+				<canvas id="myChart2" width="600" height="400"></canvas>
+			</div>
+		</div>
+		<div class="card" style="background-color: #f5f5f5">
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	// Global parameters:
+	// do not resize the chart canvas when its container does (keep at 600x400px)
+	Chart.defaults.global.responsive = true;
+	 
+	// define the chart data
+	var chartData = {
+	  labels : [{% for item in labels %}
+	             "{{item}}",
+	            {% endfor %}],
+	  datasets : [{
+	      label: '{{ legend }}',
+	      fill: true,
+	      lineTension: 0.1,
+	      backgroundColor: "rgba(75,192,192,0.4)",
+	      borderColor: "rgba(75,192,192,1)",
+	      borderCapStyle: 'butt',
+	      borderDash: [],
+	      borderDashOffset: 0.0,
+	      borderJoinStyle: 'miter',
+	      pointBorderColor: "rgba(75,192,192,1)",
+	      pointBackgroundColor: "#fff",
+	      pointBorderWidth: 1,
+	      pointHoverRadius: 5,
+	      pointHoverBackgroundColor: "rgba(75,192,192,1)",
+	      pointHoverBorderColor: "rgba(220,220,220,1)",
+	      pointHoverBorderWidth: 2,
+	      pointRadius: 1,
+	      pointHitRadius: 10,
+	      data : [{% for item in values %}
+	                {{item}},
+	              {% endfor %}],
+	      spanGaps: false
+	  }]
+	}
+	 
+	// get chart canvas
+	var ctx = document.getElementById("myChart").getContext("2d");
+	 
+	// create the chart using the chart canvas
+	var myChart = new Chart(ctx, {
+	  type: 'line',
+	  data: chartData,
+	  options: {
+    	legend: {
+        display: false
+    	},
+    	tooltips: {
+        	callbacks: {
+           		label: function(tooltipItem) {
+                  return tooltipItem.yLabel;
+           		}
+        	}
+    	}	
+		}
+	});
+
+		// Global parameters:
+	// do not resize the chart canvas when its container does (keep at 600x400px)
+	Chart.defaults.global.responsive = true;
+	 
+	// define the chart data
+	var chartData = {
+	  labels : [{% for item in days %}
+	             "{{item}}",
+	            {% endfor %}],
+	  datasets : [{
+	      label: '{{ legend }}',
+	      fill: true,
+	      lineTension: 0.1,
+	      backgroundColor: "rgba(75,192,192,0.4)",
+	      borderColor: "rgba(75,192,192,1)",
+	      borderCapStyle: 'butt',
+	      borderDash: [],
+	      borderDashOffset: 0.0,
+	      borderJoinStyle: 'miter',
+	      pointBorderColor: "rgba(75,192,192,1)",
+	      pointBackgroundColor: "#fff",
+	      pointBorderWidth: 1,
+	      pointHoverRadius: 5,
+	      pointHoverBackgroundColor: "rgba(75,192,192,1)",
+	      pointHoverBorderColor: "rgba(220,220,220,1)",
+	      pointHoverBorderWidth: 2,
+	      pointRadius: 1,
+	      pointHitRadius: 10,
+	      data : [{% for item in values %}
+	                {{runs}},
+	              {% endfor %}],
+	      spanGaps: false
+	  }]
+	}
+	 
+	// get chart canvas
+	var ctx = document.getElementById("myChart2").getContext("2d");
+	 
+	// create the chart using the chart canvas
+	var myChart = new Chart(ctx, {
+	  type: 'line',
+	  data: chartData,
+	  options: {
+    	legend: {
+        display: false
+    	},
+    	tooltips: {
+        	callbacks: {
+           		label: function(tooltipItem) {
+                  return tooltipItem.yLabel;
+           		}
+        	}
+    		}
+
+		}
+	});
+</script>
 {% endblock %}
