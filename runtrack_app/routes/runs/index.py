@@ -7,10 +7,10 @@ from flask_login import current_user, login_required
 @login_required
 def index():
 	legend = 'Monthly Data'
-	labels = ["January", "February", "March", "April", "May", "June", "July", "August"]
-	values = [10, 9, 8, 7, 6, 4, 7, 20]
+	labels = ["Week 1", "Week 2", "Week 3", "Week 4"]
+	values = [10, 9, 8, 7]
 
-	days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+	days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"]
 	runs = [1, 2, 3, 4, 5, 6, 7]
 
 	return render_template("runs/index.html", values=values, labels=labels, legend=legend,
