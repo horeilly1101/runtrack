@@ -1,6 +1,6 @@
 from runtrack_app import db, login
 from datetime import datetime
-from sqlalchemy.dialects.postgresql import INTEGER, TEXT, TIMESTAMP
+from sqlalchemy.dialects.postgresql import INTEGER, TEXT, TIMESTAMP, DATE
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -12,6 +12,8 @@ class User(UserMixin, db.Model):
 	created_at = db.Column(TIMESTAMP, default=datetime.utcnow)
 
 	runs = db.relationship("Run", backref="user", lazy=True, cascade="save-update, merge, delete")
+	days = db.relationship("Day", backref="user", lazy=True, cascade="save-update, merge, delete")
+
 
 	def __repr__(self):
 		return "<User {}>".format(self.name)
@@ -31,6 +33,16 @@ class Run(db.Model):
 
 	def __repr__(self):
 		return "<Run {} miles>".format(self.distance)
+
+class Goal(db.Model):
+	id = db.Column(INTEGER, primary_key=True, index=True)
+	user_id = db.Column(INTEGER, db.ForeignKey("user.id"), index=True)
+	distance = db.Column(TEXT)
+	date = db.Column(DATE)
+
+	def __repr__(self):
+		return "<Goal {} miles>".format(self.distance)
+
 
 @login.user_loader
 def load_user(id):
