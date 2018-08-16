@@ -21,7 +21,7 @@ def index():
 	runs = total_daily_distances(current_user.runs, start_date=today - timedelta(days=6))
 
 	labels = ["Week 1", "Week 2", "Week 3", "Week 4"]
-	values = [10, 9, 8, 7]
+	values = [23, 20, 33, 23]
 
 	return render_template("runs/index.html", 
 		values=values, 

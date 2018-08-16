@@ -72,11 +72,4 @@ def total_daily_distances(runs, start_date=None, end_date=date.today()):
 
 	'''
 	grouped_runs = group_runs(runs, start_date=start_date, end_date=end_date, distances=True)
-	i = list(map(lambda run: sum(run), grouped_runs))
-	print("GROUP "+str(grouped_runs))
-	print(i)
-	return i
-
-
-
-print("hi")
+	return list(map(lambda run: sum(run), grouped_runs))
