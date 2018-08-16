@@ -12,8 +12,6 @@ class User(UserMixin, db.Model):
 	created_at = db.Column(TIMESTAMP, default=datetime.utcnow)
 
 	runs = db.relationship("Run", backref="user", lazy=True, cascade="save-update, merge, delete")
-	days = db.relationship("Day", backref="user", lazy=True, cascade="save-update, merge, delete")
-
 
 	def __repr__(self):
 		return "<User {}>".format(self.name)
