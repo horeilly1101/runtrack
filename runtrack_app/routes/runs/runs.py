@@ -11,5 +11,6 @@ def runs():
 	# Sort runs
 	user_runs = user.runs
 	user_runs.sort(key = lambda run: run.started_at)
+	user_runs.reverse()
 	return render_template("runs/runs.html",
 		user_runs=user_runs)

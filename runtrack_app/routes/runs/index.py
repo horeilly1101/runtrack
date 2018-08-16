@@ -1,7 +1,8 @@
 from runtrack_app import app
+from runtrack_app.functions import sort_runs, group_runs, total_daily_distances
 from flask import render_template, url_for, request
 from flask_login import current_user, login_required
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 import calendar
 
 @app.route("/")
@@ -16,22 +17,8 @@ def index():
 		day = day_int % 7
 		days.append(calendar.day_abbr[day])
 
-	# Get last 7 day totals
-	last_week_runs = []
-	user_runs = current_user.runs
-	user_runs.sort(key = lambda run: run.started_at)
-	day = today
-	while day > today - timedelta(days=7):
-		daily_runs = []
-		while len(user_runs) and user_runs[-1].started_at.date() == day:
-			daily_runs.append(float(user_runs.pop().distance))
-		last_week_runs.append(daily_runs)
-		day -= timedelta(days=1)
-
-	last_week_totals = list(map(lambda runs: sum(runs), last_week_runs))
-	last_week_totals.reverse()
-
-	print(last_week_runs)
+	# Get daily distances
+	runs = total_daily_distances(current_user.runs, start_date=today - timedelta(days=6))
 
 	labels = ["Week 1", "Week 2", "Week 3", "Week 4"]
 	values = [10, 9, 8, 7]
@@ -40,4 +27,4 @@ def index():
 		values=values, 
 		labels=labels,
 		days=days,
-		runs=last_week_totals)
+		runs=runs)
