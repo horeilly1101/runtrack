@@ -14,7 +14,7 @@
 			borderColor: "rgba(75,192,192,1)",
 			borderWidth: 0,
 			borderSkipped: 'bottom',
-			data : [{% for item in runs %}
+			data : [{% for item in daily_runs %}
 					{{item}},
 					{% endfor %}],
 		}]
@@ -28,16 +28,23 @@
 		type: 'bar',
 		data: chartData,
 		options: {
-			legend: {
-			display: false
-			},
-			tooltips: {
-				callbacks: {
-					label: function(tooltipItem) {
-						return tooltipItem.yLabel;
+						legend: {
+				display: false
+				},
+				tooltips: {
+					callbacks: {
+						label: function(tooltipItem) {
+							return tooltipItem.yLabel;
+						}
 					}
-				}
-			}	
+				},
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			}
 		}
 	});
 </script>

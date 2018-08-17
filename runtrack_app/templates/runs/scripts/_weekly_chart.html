@@ -5,7 +5,7 @@
 	 
 	// define the chart data
 	var chartData = {
-		labels : [{% for item in labels %}
+		labels : [{% for item in weeks %}
 				 "{{item}}",
 				{% endfor %}],
 		datasets : [{
@@ -14,7 +14,7 @@
 			borderColor: "rgba(75,192,192,1)",
 			borderWidth: 0,
 			borderSkipped: 'bottom',
-			data : [{% for item in values %}
+			data : [{% for item in weekly_runs %}
 					{{item}},
 					{% endfor %}],
 		}]
@@ -27,24 +27,24 @@
 	var myChart = new Chart(ctx, {
 		type: 'bar',
 		data: chartData,
-    options: {
-    				legend: {
-			display: false
-			},
-			tooltips: {
-				callbacks: {
-					label: function(tooltipItem) {
-						return tooltipItem.yLabel;
+		options: {
+						legend: {
+				display: false
+				},
+				tooltips: {
+					callbacks: {
+						label: function(tooltipItem) {
+							return tooltipItem.yLabel;
+						}
 					}
-				}
-			},
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
+				},
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			}
+		}
 	});
 </script>

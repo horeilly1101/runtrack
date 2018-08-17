@@ -5,7 +5,7 @@
 	 
 	// define the chart data
 	var chartData = {
-		labels : [{% for item in days %}
+		labels : [{% for item in alltime_weeks %}
 				 "{{item}}",
 				{% endfor %}],
 		datasets : [{
@@ -27,7 +27,7 @@
 			pointHoverBorderWidth: 2,
 			pointRadius: 1,
 			pointHitRadius: 10,
-			data : [{% for item in runs %}
+			data : [{% for item in alltime_runs %}
 					{{item}},
 					{% endfor %}],
 			spanGaps: false
@@ -42,15 +42,22 @@
 		type: 'line',
 		data: chartData,
 		options: {
-			legend: {
-			display: false
-			},
-			tooltips: {
-				callbacks: {
-					label: function(tooltipItem) {
-						return tooltipItem.yLabel;
+						legend: {
+				display: false
+				},
+				tooltips: {
+					callbacks: {
+						label: function(tooltipItem) {
+							return tooltipItem.yLabel;
+						}
 					}
-				}
+				},
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
 			}
 		}
 	});
