@@ -1,8 +1,8 @@
 # runtrack
 
-![dashboard](dashboard.png)
+A simple web application to help me keep track of my running distances, times, and goals.
 
-I'm building a simple web application to help me keep track of my running distances, times, and goals.
+![dashboard](dashboard.png)
 
 It uses:
 - Python 3 and flask to handle most of the backend features
