@@ -24,3 +24,7 @@ class AddRunForm(FlaskForm):
     distance = StringField('distance', validators=[DataRequired()])
     start_date = DateField('Start date', validators=[DataRequired()])
     start_time = TimeField('Start date', validators=[DataRequired()])
+
+class AddGoalForm(FlaskForm):
+    distance = StringField('distance', validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
