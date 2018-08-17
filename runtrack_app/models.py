@@ -25,7 +25,6 @@ class User(UserMixin, db.Model):
 class Run(db.Model):
 	id = db.Column(INTEGER, primary_key=True, index=True)
 	user_id = db.Column(INTEGER, db.ForeignKey("user.id"), index=True)
-	# All distances stored in miles
 	distance = db.Column(TEXT)
 	started_at = db.Column(TIMESTAMP)
 
@@ -40,7 +39,6 @@ class Goal(db.Model):
 
 	def __repr__(self):
 		return "<Goal {} miles>".format(self.distance)
-
 
 @login.user_loader
 def load_user(id):

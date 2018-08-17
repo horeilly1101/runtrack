@@ -13,7 +13,8 @@ def index():
 	today = date.today()
 
 	# Get daily distances
-	daily_runs = total_daily_distances(user.runs, start_date=today - timedelta(days=6))
+	daily_runs = total_daily_distances(user.runs, start_date=today - timedelta(days=6)) \
+		if user.runs else []
 
 	# Get last 7 weekdays
 	days = []
@@ -22,7 +23,8 @@ def index():
 		days.append(calendar.day_abbr[day])
 
 	# Get weekly distances (all time)
-	alltime_runs = total_weekly_distances(user.runs)
+	alltime_runs = total_weekly_distances(user.runs) \
+		if user.runs else []
 
 	# Get names of recorded weeks (min 4 weeks)
 	if len(alltime_runs) > 3:
@@ -30,7 +32,7 @@ def index():
 		first_monday = first_date - timedelta(days=first_date.weekday())
 	else:
 		first_monday = today - timedelta(days=today.weekday() + 21)
-		alltime_runs = [[]] * (4 - len(alltime_runs)) + alltime_runs
+		alltime_runs = [0] * (4 - len(alltime_runs)) + alltime_runs
 
 	alltime_weeks = []
 	monday = first_monday
@@ -43,6 +45,7 @@ def index():
 			interval += "{} {}".format(calendar.month_abbr[saturday.month], saturday.day)
 		alltime_weeks.append(interval)
 		monday += timedelta(days=7)
+	print(alltime_weeks)
 
 	# Get running and name data for last 4 weeks
 	weeks = alltime_weeks[-4:]
