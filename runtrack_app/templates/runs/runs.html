@@ -9,19 +9,28 @@
 {% block runs_active %}active{% endblock %}
 
 {% block app_content %}
+	<!-- Main jumbotron for a primary marketing message or call to action -->
+	<div class="jumbotron" style="background-color: #f5f5f5; padding-top: 1em; padding-bottom: 0">
+		<div class="container">
+			<h1 class="display-3">your runs</h1>
+		</div>
+	</div>
 
-	<div class="container text-center" style="padding-top: 50px">
-		{% for run in user_runs %}
+	<div class="container text-center" style="padding-top: 0">
+		{% for day in goals_runs %}
+			{% set goal, runs = day %}
 			{% if loop.index0 % 4 == 0 %}
 			<div class="card-deck">
 			{% endif %}
 			<div class="card border-primary">
 				<div class="card-body">
-					<h2 class="card-title">{{ run.distance }} mi</h2>
-					<p class="card-text text-primary">/7 mi</p>
+					<h2 class="card-title">
+						{% for run in runs %}{{ run.distance }} {% if not loop.last %}+ {% endif %}{% endfor %} mi
+					</h2>
+					<p class="card-text text-primary">/{{ goal.distance }} mi</p>
 				</div>
 				<div class="card-footer" style="background-color: #f5f5f5">
-					<p class="card-text">{{ run.started_at }}</p>
+					<p class="card-text">{{ day_abbr[goal.date.weekday()] }} {{ month_abbr[goal.date.month] }}, {{ goal.date.day }}</p>
 				</div>
 			</div>
 			{% if loop.index0 % 4 == 3 %}

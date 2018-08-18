@@ -5,8 +5,11 @@
 	<!-- Custom styles for this template -->
 	<link href="{{ url_for('static', filename='eggshell.css') }}" rel="stylesheet" type="text/css">
 
-	<!-- Chart js -->
+	<!-- Chart.js CDN
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+	-->
+	<!-- Chart.js local -->
+	<script src="{{ url_for('static', filename='Chart.bundle.min.js') }}"></script>	
 {% endblock %}
 
 {% block home_active %}active{% endblock %}
