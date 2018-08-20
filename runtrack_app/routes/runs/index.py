@@ -1,6 +1,6 @@
 from runtrack_app import app
 from runtrack_app.functions import total_daily_distances, total_weekly_distances, \
-	sort_runs, combine_goals_and_runs
+	sort_runs, combine_daily_and_weekly, last_goal
 from flask import render_template, url_for, request
 from flask_login import current_user, login_required
 from datetime import date, datetime, timedelta
@@ -12,6 +12,10 @@ import calendar
 def index():
 	user = current_user
 	today = date.today()
+
+	i = combine_daily_and_weekly(user.runs, user.goals)
+	print("THIS IS IT")
+	print(i)
 
 	# Get daily distances
 	daily_runs = total_daily_distances(user.runs, start_date=today - timedelta(days=6)) \

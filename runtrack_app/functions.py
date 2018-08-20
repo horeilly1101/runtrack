@@ -8,6 +8,7 @@ import math
 from copy import copy
 from functools import reduce
 from runtrack_app.models import Run, Goal
+from flask_login import current_user, login_required
 
 def sort_runs(runs):
 	'''
@@ -19,6 +20,17 @@ def sort_runs(runs):
 	sorted_runs = copy(runs)
 	sorted_runs.sort(key = lambda run: run.started_at)
 	return sorted_runs
+
+def sort_goals(goals):
+	'''
+	sorts a list of Goal objects by Goal.date
+
+	kw args:
+		goals - a list of Goal objects
+	'''
+	sorted_goals = copy(goals)
+	sorted_goals.sort(key = lambda goal: goal.date)
+	return sorted_goals
 
 def sum_runs(runs):
 	'''
@@ -79,8 +91,6 @@ def total_daily_distances(runs, start_date=None, end_date=date.today()):
 			should stop grouping runs together at, defaults to the current day
 	'''
 	grouped_runs = group_runs_daily(runs, start_date=start_date, end_date=end_date)
-	print("GROUPED")
-	print(grouped_runs)
 	return list(map(lambda run: sum_runs(run), grouped_runs))
 
 def group_runs_weekly(runs, 
@@ -171,7 +181,21 @@ def group_runs_daily_and_weekly(runs, num_weeks=None, end_date=date.today()):
 
 	return grouped_runs
 
-def combine_goals_and_runs(goals, runs):
+def last_goal(goals):
+	'''
+	returns the last day a goal is recorded for.  Designed to run faster than 
+	sort_goals
+
+	kw args:
+		goals - a list of Goal objects
+	'''
+	last_date = date.min
+	for goal in goals:
+		if goal.date > last_date:
+			last_date = goal.date
+	return last_date
+
+def combine_daily(runs, goals):
 	'''
 	returns a list of 2-tuples, where the tuples contain a goal, and all runs for 
 	the day in a list (e.g. tuple([goal, run_list])).  The days are in order from 
@@ -180,21 +204,14 @@ def combine_goals_and_runs(goals, runs):
 
 	kw args:
 		runs - a list of Run objects
-
-		start_date - a datetime object that specifies which date the function
-			should begin grouping runs together at, defaults to the first date the
-			user has a run recorded at
-
-		end_date - a datetime object that specifies which date the function
-			should stop grouping runs together at, defaults to the current day
 	'''
 	# get grouped runs and filter out days with no runs
-	grouped_runs = group_runs_daily(runs, start_date=None, end_date=date.today())
+	end_date = date.today()
+	grouped_runs = group_runs_daily(runs, start_date=None, end_date=end_date)
 	filtered_runs = list(filter(lambda run: run, grouped_runs))
 
 	# sort goals by date
-	sorted_goals = copy(goals)
-	sorted_goals.sort(key = lambda goal: goal.date)
+	sorted_goals = sort_goals(goals)
 
 	# initialize variables and iterate through sequences
 	i, j = (0, 0)
@@ -211,4 +228,36 @@ def combine_goals_and_runs(goals, runs):
 			i += 1
 			j += 1
 	return combined_seq
+
+def combine_daily_and_weekly(runs, goals):
+	'''
+	returns a list of lists of 2-tuples, where the tuples contain a goal, and all runs for 
+	the day in a list (e.g. tuple([goal, run_list])).  The days are in order from 
+	least to most recent.  If there is a goal for a given day, it will be the first 
+	element in the list.
+
+	kw args:
+		runs - a list of Run objects
+
+		goals - a list of Goal objects
+	'''
+	last_goal_date = last_goal(goals)
+	end_date = date.today() if last_goal_date <= date.today() else last_goal_date
+
+	combined_daily = combine_daily(runs, goals)
+	last_monday = date.today() - timedelta(days=end_date.weekday())
+
+	start_date = combined_daily[0][0].date
+
+	combined_weekly = []
+	day = last_monday
+	while day >= start_date - timedelta(days=start_date.weekday()):
+		weekly_runs = []
+		while len(combined_daily) and combined_daily[-1][0].date >= day:
+			weekly_runs.append(combined_daily.pop())
+
+		combined_weekly.append(weekly_runs)
+		day -= timedelta(days=7)
+
+	return combined_weekly[::-1]
 

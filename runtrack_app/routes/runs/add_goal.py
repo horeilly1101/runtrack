@@ -12,11 +12,18 @@ def add_goal():
 	form = AddGoalForm()
 
 	if form.validate_on_submit():
-		goal = Goal(distance=form.distance.data, user_id = user.id, date=form.date.data)
-		db.session.add(goal)
-		db.session.commit()
+		goal_check = Goal.query.filter_by(user_id=user.id, date=form.date.data).first()
+		if not goal_check:
+			goal = Goal(distance=form.distance.data, user_id = user.id, date=form.date.data)
+			db.session.add(goal)
+			db.session.commit()
+			flash('Your goal has been added!')
+		else:
+			goal_check.distance = form.distance.data
+			db.session.add(goal_check)
+			db.session.commit()
+			flash('Your goal has been updated!')
 
-		flash('Your goal has been added!')
 		return redirect('runs')
 	return render_template("runs/add_goal.html",
 		form=form)
