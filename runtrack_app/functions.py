@@ -261,3 +261,25 @@ def combine_daily_and_weekly(runs, goals):
 
 	return combined_weekly[::-1]
 
+def total_combined_distances(combined_seq):
+	'''
+	returns the total run and goal distances in a list that has the same form as
+	the output of combine_daily
+
+	kw args:
+		combined_seq - a list of tuples where the first element is a Goal object
+			and the second is a list of Run objects
+	'''
+	goal_total = 0
+	run_total = 0
+	num_runs = 0
+	daily_run_totals = [0] * 7
+
+	for goal, runs in combined_seq:
+		goal_total += float(goal.distance)
+		num_runs += len(runs)
+		daily_run_totals[goal.date.weekday()] = sum_runs(runs)
+
+	run_total = sum(daily_run_totals)
+	return (goal_total, run_total, daily_run_totals, num_runs)
+

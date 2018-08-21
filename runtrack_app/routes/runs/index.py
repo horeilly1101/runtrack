@@ -13,10 +13,6 @@ def index():
 	user = current_user
 	today = date.today()
 
-	i = combine_daily_and_weekly(user.runs, user.goals)
-	print("THIS IS IT")
-	print(i)
-
 	# Get daily distances
 	daily_runs = total_daily_distances(user.runs, start_date=today - timedelta(days=6)) \
 		if user.runs else []
