@@ -217,10 +217,16 @@ def combine_daily(runs, goals):
 	i, j = (0, 0)
 	combined_seq = []
 	while i < len(filtered_runs) or j < len(sorted_goals):
-		if (j == len(sorted_goals)) or (filtered_runs[i][0].started_at.date() < sorted_goals[j].date):
+		if (j == len(sorted_goals)):
 			combined_seq.append((Goal(distance=0, date=filtered_runs[i][0].started_at.date()), filtered_runs[i]))
 			i += 1
-		elif (i == len(filtered_runs)) or (filtered_runs[i][0].started_at.date() > sorted_goals[j].date):
+		elif (i == len(filtered_runs)):
+			combined_seq.append((sorted_goals[j], [Run(distance=0)]))
+			j += 1
+		elif (filtered_runs[i][0].started_at.date() < sorted_goals[j].date):
+			combined_seq.append((Goal(distance=0, date=filtered_runs[i][0].started_at.date()), filtered_runs[i]))
+			i += 1
+		elif (filtered_runs[i][0].started_at.date() > sorted_goals[j].date):
 			combined_seq.append((sorted_goals[j], [Run(distance=0)]))
 			j += 1
 		elif filtered_runs[i][0].started_at.date() == sorted_goals[j].date:
@@ -245,7 +251,7 @@ def combine_daily_and_weekly(runs, goals):
 	end_date = date.today() if last_goal_date <= date.today() else last_goal_date
 
 	combined_daily = combine_daily(runs, goals)
-	last_monday = date.today() - timedelta(days=end_date.weekday())
+	last_monday = end_date - timedelta(days=end_date.weekday())
 
 	start_date = combined_daily[0][0].date
 
@@ -274,12 +280,14 @@ def total_combined_distances(combined_seq):
 	run_total = 0
 	num_runs = 0
 	daily_run_totals = [0] * 7
+	all_run_totals = []
 
 	for goal, runs in combined_seq:
 		goal_total += float(goal.distance)
 		num_runs += len(runs)
 		daily_run_totals[goal.date.weekday()] = sum_runs(runs)
+		all_run_totals.extend(list(map(lambda run: float(run.distance), runs)))
 
 	run_total = sum(daily_run_totals)
-	return (goal_total, run_total, daily_run_totals, num_runs)
+	return (goal_total, run_total, daily_run_totals, all_run_totals, num_runs)
 

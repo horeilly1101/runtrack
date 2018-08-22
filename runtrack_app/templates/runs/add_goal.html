@@ -14,7 +14,7 @@
 	<form method="post" class="form-signin ">
 		{{ form.csrf_token }}
 		<div class="form-group">
-			<h1 class="mb-3 font-weight-normal text-success text-center">add goal</h1>
+			<h1 class="mb-3 font-weight-normal text-primary text-center">add goal</h1>
 			{{ form.distance.label() }} (in miles)
 			{{ form.distance(size=32, class="form-control", type="number", step="0.1") }}
 			{% for error in form.distance.errors %}
@@ -31,6 +31,6 @@
 			</div>
 		</div>
 		<br>
-		<button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
+		<button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
 	</form>
 {% endblock %}

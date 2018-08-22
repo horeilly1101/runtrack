@@ -14,14 +14,18 @@
 {% block app_content %}
 	<br>
 	<div class="container text-center" style="padding-top: 0">
+		{% if weeks %}
+			{% set last_monday = weeks[0][0][0].date - timedelta(days=weeks[0][0][0].date.weekday()) %}
+		{% endif %}
 		{% for week in weeks %}
-			{% set goal_total, run_total, daily_run_totals, num_runs = total_combined_distances(week) %}
-			<hr class="bg-success">
+			{% set goal_total, run_total, daily_run_totals, all_run_totals, num_runs = total_combined_distances(week) %}
 			<div class="card-deck">
 				<div class="card" style="background-color: #f5f5f5; border-color: #f5f5f5">
 					<div class="card-body">
 						<h1 class="card-title text-success">
-							Mar 13 - June 20
+							{% set this_monday = last_monday - timedelta(days=(7*loop.index0)) %}
+							{% set this_friday = this_monday + timedelta(days=6) %}
+							{{ month_abbr[this_monday.month] }} {{ this_monday.day }} - {% if this_monday.month != this_friday.month %}{{ month_abbr[this_friday.month] }}{% endif %} {{ this_friday.day }}
 						</h1>
 						<br>
 						<h2 class="card-title">
@@ -37,7 +41,7 @@
 							Run Increase
 						</li>
 						<li class="list-group-item" style="background-color: #f5f5f5">Average distance: {{ "{0:0.1f}".format(run_total/7.0) }} miles</li>
-						<li class="list-group-item" style="background-color: #f5f5f5">Longest Run</li>
+						<li class="list-group-item" style="background-color: #f5f5f5">Longest Run: {{ max(all_run_totals) }} miles</li>
 					</ul>
 				</div>
 				<div class="card" style="background-color: #f5f5f5; border-color: #f5f5f5">
@@ -47,7 +51,6 @@
 				</div>
 			</div>
 			<hr class="bg-success">
-			<br>
 			{% for day in week %}
 				{% set goal, runs = day %}
 				{% if loop.index0 % 4 == 0 %}
@@ -66,7 +69,7 @@
 				</div>
 				{% if loop.index0 % 4 == 3 %}
 				</div>
-				<br>
+				<hr class="bg-success">
 				{% elif loop.last %}
 				{% set remaining = 4 - (loop.length % 4) %}
 				{% for i in range(remaining) %}
@@ -74,9 +77,12 @@
 				</div>
 				{% endfor %}
 				</div>
-				<br>
+				<hr class="bg-success">
 				{% endif %}
 			{% endfor %}
+			{% if not week %}
+				No runs this week
+			{% endif %}
 			<!-- add chart scripts -->
 			{% with daily_runs = daily_run_totals, chart_id = 'chart{}'.format(loop.index0) %}
 				{% set days = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"] %}
