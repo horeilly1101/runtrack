@@ -267,7 +267,7 @@ def combine_daily_and_weekly(runs, goals):
 
 	return combined_weekly[::-1]
 
-def total_combined_distances(combined_seq):
+def combined_summary(combined_seq):
 	'''
 	returns the total run and goal distances in a list that has the same form as
 	the output of combine_daily
@@ -289,5 +289,8 @@ def total_combined_distances(combined_seq):
 		all_run_totals.extend(list(map(lambda run: float(run.distance), runs)))
 
 	run_total = sum(daily_run_totals)
-	return (goal_total, run_total, daily_run_totals, all_run_totals, num_runs)
+	return (goal_total, 
+		run_total, 
+		daily_run_totals, 
+		all_run_totals, num_runs)
 

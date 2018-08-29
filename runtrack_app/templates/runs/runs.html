@@ -18,7 +18,7 @@
 			{% set last_monday = weeks[0][0][0].date - timedelta(days=weeks[0][0][0].date.weekday()) %}
 		{% endif %}
 		{% for week in weeks %}
-			{% set goal_total, run_total, daily_run_totals, all_run_totals, num_runs = total_combined_distances(week) %}
+			{% set goal_total, run_total, daily_run_totals, all_run_totals, num_runs = combined_summary(week) %}
 			<div class="card-deck">
 				<div class="card" style="background-color: #f5f5f5; border-color: #f5f5f5">
 					<div class="card-body">
@@ -38,7 +38,20 @@
 					<ul class="list-group list-group-flush border-success">
 						<li class="list-group-item" style="background-color: #f5f5f5">{{ num_runs }} {% if num_runs == 1 %}run{% else %}runs{% endif %}</li>
 						<li class="list-group-item" style="background-color: #f5f5f5">
-							INCREASE
+							{% if loop.nextitem %}
+								{% set prev_total = combined_summary(loop.nextitem)[1] %}
+								{% if prev_total %}
+									{% if run_total < prev_total %}
+										{{ -1 * (run_total - prev_total) }} mile ({{ -10 * (run_total - prev_total) / prev_total }}%) decrease from last week
+									{% else %}
+										{{ run_total - prev_total }} mile ({{ 10 * (run_total - prev_total) / prev_total }}%) increase from last week
+									{% endif %}
+								{% else %}
+									{{ run_total - prev_total }} mile increase from last week
+								{% endif %}
+							{% else %}
+								{{ run_total }} mile increase from last week
+							{% endif %}
 						</li>
 						<li class="list-group-item" style="background-color: #f5f5f5">Average distance: {{ "{0:0.1f}".format(run_total/7.0) }} miles</li>
 						<li class="list-group-item" style="background-color: #f5f5f5">Longest Run: {{ max(all_run_totals) }} miles</li>
@@ -56,7 +69,11 @@
 				{% if loop.index0 % 4 == 0 %}
 				<div class="card-deck">
 				{% endif %}
+				{% if float(goal.distance) < sum_runs(runs) %}
 				<div class="card border-primary">
+				{% else %}
+				<div class="card border-danger">
+				{% endif %}
 					<div class="card-body">
 						<h2 class="card-title">
 							{% for run in runs %}{{ run.distance }} {% if not loop.last %}+ {% endif %}{% endfor %} miles

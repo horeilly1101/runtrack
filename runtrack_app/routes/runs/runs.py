@@ -1,8 +1,8 @@
 from runtrack_app import app
 from runtrack_app.models import Run, Goal
 from runtrack_app.functions import combine_daily_and_weekly, group_runs_daily_and_weekly, \
-	sort_runs, group_runs_daily, total_daily_distances, total_combined_distances, \
-	combine_daily
+	sort_runs, group_runs_daily, total_daily_distances, combined_summary, \
+	combine_daily, sum_runs
 from flask import render_template, url_for, request
 from flask_login import current_user, login_required
 import calendar
@@ -24,6 +24,8 @@ def runs():
 		weeks=weeks,
 		month_abbr=calendar.month_abbr,
 		day_abbr=calendar.day_abbr,
-		total_combined_distances=total_combined_distances,
+		combined_summary=combined_summary,
 		max=max,
-		timedelta=timedelta)
+		timedelta=timedelta,
+		sum_runs=sum_runs,
+		float=float)
