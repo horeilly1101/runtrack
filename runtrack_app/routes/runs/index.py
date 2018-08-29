@@ -1,5 +1,6 @@
 from runtrack_app import app
-from runtrack_app.functions import total_daily_distances, total_weekly_distances, sort_runs
+from runtrack_app.functions import total_daily_distances, total_weekly_distances, \
+	sort_runs, combine_daily_and_weekly, last_goal
 from flask import render_template, url_for, request
 from flask_login import current_user, login_required
 from datetime import date, datetime, timedelta
@@ -45,7 +46,6 @@ def index():
 			interval += "{} {}".format(calendar.month_abbr[saturday.month], saturday.day)
 		alltime_weeks.append(interval)
 		monday += timedelta(days=7)
-	print(alltime_weeks)
 
 	# Get running and name data for last 4 weeks
 	weeks = alltime_weeks[-4:]
