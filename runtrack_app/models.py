@@ -27,7 +27,7 @@ class Run(db.Model):
 	id = db.Column(INTEGER, primary_key=True, index=True)
 	user_id = db.Column(INTEGER, db.ForeignKey("user.id"), index=True)
 	distance = db.Column(TEXT)
-	started_at = db.Column(TIMESTAMP)
+	date = db.Column(DATE)
 
 	def __repr__(self):
 		return "<Run {} miles>".format(self.distance)
