@@ -22,9 +22,14 @@ class Runs():
 		_runs -- a list of runs sorted in nondecreasing order by date
 
 	public methods:
+		add_all -- Merges a Runs object and a list of Run objects into 
+			a single Runs object
+
 		add -- adds a run in the correct order
 
-		extend -- combines a run object
+		extend -- combines two Runs objects
+
+		interval -- gets all runs within a time interval
 
 		last -- returns most recent run
 
@@ -50,7 +55,33 @@ class Runs():
 		'''
 		self._runs = Runs.__sort_runs(runs)
 
- 	def add_all(self, runs):
+	def __str__(self):
+		'''converts Runs object into a string
+
+		kw args:
+			self -- Runs object
+		'''
+		return str(self._runs)
+
+	def __len__(self):
+		'''Gets length of Runs object
+
+		kw args:
+			self -- Runs object
+		'''
+		return len(self._runs)
+
+	def __getitem__(self, key):
+		'''returns item with associated self._runs index
+
+		kw args:
+			self -- Runs object
+
+			key -- Integer corresponding to self._runs index
+		'''
+		return self._runs[key]
+
+	def add_all(self, runs):
 		'''Merges a Runs object and a list of Run objects into a single Runs object
 
 		kw args:
@@ -65,13 +96,13 @@ class Runs():
 		# Increase length of self._runs
 		self._runs = sorted_runs + _runs_copy
 
-		# Implement Merge algorithmj
-		sorted_runs.append(float("inf"))
-		_runs_copy.append(float("inf"))
+		# Implement Merge algorithm
+		sorted_runs.append(Run(date=date.max))
+		_runs_copy.append(Run(date=date.max))
 		i = 0
 		j = 0
-		for k in range(len(self._runs) + len(runs)):
-			if sorted_runs[i] <= _runs_copy[j]:
+		for k in range(len(self._runs)):
+			if sorted_runs[i].date <= _runs_copy[j].date:
 				self._runs[k] = sorted_runs[i]
 				i += 1
 			else:
@@ -118,10 +149,9 @@ class Runs():
 					elif run.date > start_date:
 						interval_runs.append(run)
 				return interval_runs
-				
+
 			else:
 				return []
-
 
 	def last(self):
 		'''Gets the most recent run
@@ -145,12 +175,13 @@ class Runs():
 		else:
 			return None
 
-class Goals():
-	def __init__(self, goals = []):
-		self._goals = goals
+	def sum(self):
+		'''Sums the distances of runs in the instance
 
-	def sort():
-		sorted_goals = 
+		kw args:
+			self -- Runs object
+		'''
+		return float(reduce(lambda total, run: total + run.distance, self._runs, 0))
 
 class RunsGoals():
 	def __init__(self, runs = [], goals = [], groupby = 1):
