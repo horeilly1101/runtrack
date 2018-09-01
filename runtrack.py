@@ -5,6 +5,4 @@ from runtrack_app import app, db
 def make_shell_context():
 	return {'db': db}
 
-import runtrack_app.functions as func
-
-print(func)
+from runtrack_app.classes import Runs

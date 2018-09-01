@@ -1,8 +1,9 @@
+'''Contains objects crucial to the app design
+
+classes:
+	Runs -- combines runs into a sorted list
 '''
-File that contains the primary data structure of the applcation,
-a list of 2-tuples that each contain a goal and a set of runs
-that occurred on that day.
-'''
+
 from datetime import date, datetime, timedelta
 import calendar
 import math
@@ -20,7 +21,7 @@ class Runs():
 	instance variables:
 		_runs -- a list of runs sorted in nondecreasing order by date
 
-	methods:
+	public methods:
 		add -- adds a run in the correct order
 
 		extend -- combines a run object
@@ -49,7 +50,7 @@ class Runs():
 		'''
 		self._runs = Runs.__sort_runs(runs)
 
- 	def extend(self, runs):
+ 	def add_all(self, runs):
 		'''Merges a Runs object and a list of Run objects into a single Runs object
 
 		kw args:
@@ -85,19 +86,64 @@ class Runs():
 
 			run -- Run object
 		'''
-		self.extend([run])
+		self.add_all([run])
+
+	def extend(self, runs_instance):
+		'''Combines two Runs instances
+
+		kw args:
+			self -- Runs object
+
+			runs_instance -- Runs object
+		'''
+		self.add_all(runs_instance._runs)
+
+	def interval(self, start_date, end_date):
+		'''gets all runs in a time interval
+
+		kw args:
+			start_date -- date object
+
+			end_date -- date object
+		'''
+		if start_date > end_date:
+			raise ValueError
+
+		else:
+			if self._runs:
+				interval_runs = []
+				for run in self._runs:
+					if run.date > end_date:
+						break
+					elif run.date > start_date:
+						interval_runs.append(run)
+				return interval_runs
+				
+			else:
+				return []
+
 
 	def last(self):
+		'''Gets the most recent run
+
+		kw args:
+			self -- Runs object
+		'''
 		if len(self._runs):
 			return self._runs[-1]
 		else:
-			return Run()
+			return None
 
 	def first(self):
+		'''Gets the first recorded run
+
+		kw args:
+			self -- Runs object
+		'''
 		if len(self._runs):
 			return self._runs[0]
 		else:
-			return Run()
+			return None
 
 class Goals():
 	def __init__(self, goals = []):
