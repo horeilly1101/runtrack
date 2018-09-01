@@ -2,6 +2,10 @@
 
 classes:
 	Runs -- combines runs into a sorted list
+
+	GoalRuns -- combines a goal and Runs object into a 2-tuple
+
+	DateGoalRuns -- maps a date to a GoalRuns object
 '''
 
 from datetime import date, datetime, timedelta
@@ -138,7 +142,7 @@ class Runs():
 			end_date -- date object
 		'''
 		if start_date > end_date:
-			raise ValueError
+			raise ValueError("Invalid interval")
 
 		else:
 			if self._runs:
@@ -162,7 +166,7 @@ class Runs():
 		if len(self._runs):
 			return self._runs[-1]
 		else:
-			return None
+			return Run()
 
 	def first(self):
 		'''Gets the first recorded run
@@ -173,7 +177,7 @@ class Runs():
 		if len(self._runs):
 			return self._runs[0]
 		else:
-			return None
+			return Run()
 
 	def sum(self):
 		'''Sums the distances of runs in the instance
@@ -183,7 +187,60 @@ class Runs():
 		'''
 		return float(reduce(lambda total, run: total + run.distance, self._runs, 0))
 
-class RunsGoals():
-	def __init__(self, runs = [], goals = [], groupby = 1):
-		self._runs = runs
-		self._goals = goals
+class GoalRuns():
+	'''Combines a Goal object with a Runs object
+
+	kw args:
+		goal -- a Goal object
+
+		runs -- a Runs object
+
+	instance variables:
+		_goalruns - a 2-tuple of a Goal object and a GoalRuns object
+
+		goal -- a Goal object
+
+		runs -- a Runs object
+
+	public methods:
+		diff -- gets the difference between total run distance and goal
+	'''
+	def __init__(self, goal=Goal(), runs=Runs()):
+		'''initializes GoalRuns object
+
+		kw args:
+			self -- GoalRuns object
+
+			goal -- Goal object
+
+			runs -- Runs object
+		'''
+		# ensure all criteria are met
+		same_date = bool(reduce())
+
+	def __str__(self):
+		'''converts GoalRuns object into a string
+
+		kw args:
+			self -- GoalRuns object
+		'''
+		return str(self._goalruns)
+
+	def diff(self):
+		'''gets the difference between total run distance and goal
+
+		kw args:
+			self -- GoalRuns object
+		'''
+		return self.runs.sum() - self.goal.distance
+
+class DateGoalRuns():
+	'''Maps a date to a GoalRuns object
+
+
+
+
+
+
+
+
