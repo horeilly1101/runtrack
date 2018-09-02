@@ -6,6 +6,8 @@ classes:
 	GoalRuns -- combines a goal and Runs object into a 2-tuple
 
 	GroupGoalRuns -- combines GoalRuns objects into a list
+
+	GroupGoalRunsWeekly -- subclass of GroupGoalRuns
 '''
 
 from datetime import date, datetime, timedelta
@@ -242,6 +244,14 @@ class Runs():
 		'''
 		return float(reduce(lambda total, run: total + run.distance, self._runs, 0))
 
+	def longest_run(self):
+		'''returns Run object with highest distance
+
+		kw args;
+			self -- Runs object
+		'''
+		return max(self._runs, key=lambda run: run.distance)
+
 class GoalRuns():
 	'''Combines a Goal object with a Runs object
 
@@ -368,6 +378,21 @@ class GroupGoalRuns():
 
 	instance variables:
 		_ggr -- a list of GoalRuns objects
+
+	public methods:
+		first -- returns the earliest GoalRuns object
+
+		sum_goals -- returns the sum of distance of all Goal objects
+
+		sum_runs -- returns the sum of distances of all Runs objects
+
+		num_runs -- returns the number of runs
+
+		first_monday -- returns a Date instance of the first Monday
+
+		weekly -- returns a list of GroupGoalRunsWeekly objects
+
+		diff -- returns difference between total sums of runs and goals
 	'''
 	def __sort_goals(goals):
 		'''static method that sorts a list of goals by date
@@ -476,12 +501,6 @@ class GroupGoalRuns():
 		'''
 		return reduce(lambda total, goalruns: total + goalruns.sum(), self._ggr, 0)
 
-	def longest_run(self):
-		'''returns run object of longest run
-
-		'''
-		pass
-
 	def num_runs(self):
 		'''computes total number of runs
 
@@ -501,8 +520,19 @@ class GroupGoalRuns():
 			first_date = self.first().date
 			return first_date - timedelta(days=first_date.weekday())
 
+	def diff(self):
+		'''returns difference between total runs and total goals
+
+		kw args:
+			self -- GroupGoalRuns object
+		'''
+		return self.sum_runs() - self.sum_goals()
+
 class GroupGoalRunsWeekly(GroupGoalRuns):
 	'''group goalruns objects into a list
+
+	super class:
+		GroupGoalRuns
 
 	kw args:
 		goals -- a list of Goal objects
@@ -514,18 +544,50 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		sunday -- a date object
 
 	instance variables:
-		_ggr -- a list of GoalRuns objects
+		_ggr -- a list of GoalRuns objects (inherits)
+
+		_wggr -- a list of GoalRuns objects
 
 		monday -- a date object
 
 		sunday -- a date object
+
+	methods: 
+		(inherited from GroupGoalRuns class)
+
+		longest_run -- returns Run instance of the longest run
+
+		compare -- returns the difference between two wggr instances
 	'''
 	def __init__(self, goals, runs, monday, sunday):
 		GroupGoalRuns.__init__(self, goals, runs)
+		self._wggr = self._ggr
 		self.monday = monday
 		self.sunday = sunday
 
+	def longest_run(self):
+		'''returns Run object of longest run
 
+		kw args:
+			self -- GroupGoalRunsWeekly object
+		'''
+		runs = Runs()
+		for goalruns in self._wggr:
+			runs.extend(goalruns.runs)
+		return runs.longest_run()
+
+	def compare_distance(self, wggr):
+		'''returns the difference and percent increase in distances between two wggr objects
+
+		kw args:
+			self -- a GroupGoalRunsWeekly object
+
+			ggr -- a GroupGoalRunsWeekly object
+		'''
+		difference = self.sum_runs() - wggr.sum_runs()
+		return (difference, difference / wggr.sum_runs())
+
+# Define method for GroupGoalRuns
 def weekly(self):
 	'''combines GroupGoalRuns object by week
 

@@ -21,4 +21,4 @@ if __name__ == "__main__":
 
 	ggr = GroupGoalRuns(goals, runs).weekly()
 	for i in ggr:
-		print(i.monday, " ", i.sunday)
+		print(i.longest_run())
