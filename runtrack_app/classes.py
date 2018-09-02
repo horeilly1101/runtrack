@@ -5,7 +5,7 @@ classes:
 
 	GoalRuns -- combines a goal and Runs object into a 2-tuple
 
-	DateGoalRuns -- maps a date to a GoalRuns object
+	GroupGoalRuns -- maps a date to a GoalRuns object
 '''
 
 from datetime import date, datetime, timedelta
@@ -38,6 +38,10 @@ class Runs():
 		last -- returns most recent run
 
 		first -- returns least recent run
+
+		one_day -- returns True if all runs on same day, false otherwise
+
+		sum -- returns sum of all run distances
 	'''
 	def __sort_runs(runs):
 		'''sorts a list of Run objects in nondecreasing order by date
@@ -58,6 +62,14 @@ class Runs():
 			runs -- a list of Run objects, defaults to an empty list
 		'''
 		self._runs = Runs.__sort_runs(runs)
+
+	def empty(self):
+		'''computes whether or not _runs is empty
+
+		kw args:
+			self -- Runs object
+		'''
+		return False if self._runs else True
 
 	def __str__(self):
 		'''converts Runs object into a string
@@ -179,6 +191,21 @@ class Runs():
 		else:
 			return Run()
 
+	def one_day(self):
+		'''Computes whether all Run objects have the same date
+
+		kw args:
+			self -- Runs object
+		'''
+		if len(self._runs):
+			first_run = self.first()
+			for run in self._runs:
+				if run.date != first_run.date:
+					return False
+			return True
+		else:
+			return True
+
 	def sum(self):
 		'''Sums the distances of runs in the instance
 
@@ -205,7 +232,7 @@ class GoalRuns():
 	public methods:
 		diff -- gets the difference between total run distance and goal
 	'''
-	def __init__(self, goal=Goal(), runs=Runs()):
+	def __init__(self, goal=Goal(), runs=Runs(), date=None):
 		'''initializes GoalRuns object
 
 		kw args:
@@ -214,9 +241,50 @@ class GoalRuns():
 			goal -- Goal object
 
 			runs -- Runs object
+
+		instance variables:
+			goal -- Goal object
+
+			runs -- Runs object
+
+			date -- date of GoalRun (must be the same for goal and runs)
+
+		methods:
+			diff - returns difference between sum of runs and goal distances
+
+			sum -- returns sum of run distances
 		'''
-		# ensure all criteria are met
-		same_date = bool(reduce())
+		# ensure goal, runs, and date all refer to same date
+		if date:
+			print("ONE")
+			if (goal.date and goal.date != date) or (runs.one_day() and runs.first().date != date):
+				raise ValueError("Goal, runs, and date should all have same date")
+			else:
+				self.date = date
+
+		elif goal.date and runs.empty():
+			print("TWO")
+			self.date = goal.date
+
+		elif not goal.date and (not runs.empty() and runs.one_day()):
+			print("THREE")
+			self.date = runs.first().date
+
+		elif goal.date and (not runs.empty() and runs.one_day()):
+			print("FOUR")
+			if goal.date == runs.first().date:
+				self.date = goal.date
+			else:
+				raise ValueError("Goal and Runs should have same date")
+
+		else:
+			print("HUH")
+			raise ValueError("Must define at least one kw argument")
+
+		# set remaining instance variables
+		self.runs = runs
+		self.goal = goal
+
 
 	def __str__(self):
 		'''converts GoalRuns object into a string
@@ -224,7 +292,7 @@ class GoalRuns():
 		kw args:
 			self -- GoalRuns object
 		'''
-		return str(self._goalruns)
+		return str((self.goal, self.runs))
 
 	def diff(self):
 		'''gets the difference between total run distance and goal
@@ -234,8 +302,31 @@ class GoalRuns():
 		'''
 		return self.runs.sum() - self.goal.distance
 
-class DateGoalRuns():
-	'''Maps a date to a GoalRuns object
+	def sum(self):
+		'''gets the sum of all run distances
+
+		kw args:
+			self -- GoalRuns object
+		'''
+		return self.runs.sum()
+
+class GroupGoalRuns():
+	'''Combines GoalRuns objects into a list
+
+	kw args:
+		goals -- list of Goal objects
+
+		runs -- list of Run objects
+	'''
+	def __init__(self, goals, runs):
+		'''initializes GroupGoalRuns object
+
+		kw args:
+			goals -- list of Goal objects
+
+			runs - list of Run objects
+		'''
+		pass
 
 
 
