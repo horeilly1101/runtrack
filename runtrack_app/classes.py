@@ -62,6 +62,7 @@ class Runs():
 			runs -- a list of Run objects, defaults to an empty list
 		'''
 		self._runs = Runs.__sort_runs(runs)
+		self.date = date.today() if not runs else runs[0].date
 
 	def empty(self):
 		'''computes whether or not _runs is empty
@@ -338,6 +339,51 @@ class GroupGoalRuns():
 
 		runs -- list of Run objects
 	'''
+	def __sort_goals(goals):
+		'''static method that sorts a list of goals by date
+
+		kw args:
+			goals -- a list of Goal objects
+		'''
+		sorted_goals = deepcopy(goals)
+		sorted_goals.sort(key=lambda goal: goal.date)
+		return sorted_goals
+
+	def __combine_goals_runs(goals, runs):
+		'''combines a goals and Runs objects into a list of GoalRuns
+
+		kw args:
+			goals -- a list of Goal objects
+
+			runs -- a list of Run objects
+		'''
+		# copy inputs
+		goals_copy = GroupGoalRuns.__sort_goals(goals)
+		runs_copy = deepcopy(runs)
+		runs_daily = Runs(runs_copy).daily()
+
+		# implement a variation of Merge algorithm
+		combined = []
+		goals_copy.append(Goal(date=date.max))
+		runs_daily.append(Runs([Run(date=date.max)]))
+
+		i = 0
+		j = 0
+		while goals_copy[i].date != date.max and runs_daily[j].date != date.max:
+			if goals_copy[i].date == runs_daily[j].date:
+				combined.append(GoalRuns(goal=goals_copy[i], runs=runs_daily[j]))
+				i, j = i + 1, j + 1
+
+			elif goals_copy[i].date < runs_daily[j].date:
+				combined.append(GoalRuns(goal=goals_copy[i]))
+				i += 1
+
+			else:
+				combined.append(GoalRuns(runs=runs_daily[j]))
+				j += 1
+
+		return combined
+
 	def __init__(self, goals, runs):
 		'''initializes GroupGoalRuns object
 
