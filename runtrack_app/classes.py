@@ -439,7 +439,7 @@ class GroupGoalRuns():
 		kw args:
 			self -- GroupGoalRuns object
 		'''
-		pass
+		return reduce(lambda total, goalruns: total + goalruns.sum(), self._ggr, 0)
 
 
 

@@ -23,4 +23,4 @@ if __name__ == "__main__":
 	for gr in ggr:
 		print(gr)
 
-	print("sum goals", ggr.sum_goals())
+	print("sum runs", ggr.sum_runs())
