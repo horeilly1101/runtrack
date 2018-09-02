@@ -15,6 +15,14 @@ if __name__ == "__main__":
 	for i in range(0, 14):
 		runs.append(Run(distance = 2 * i, date=today-timedelta(days=i)))
 
-	gr = GoalRuns(runs = Runs([Run(date=today-timedelta(days=1))]), date = today)
+	# gr = GoalRuns(runs = Runs([Run(date=today-timedelta(days=1))]), date = today)
 
-	print(gr)
+	R = Runs(runs)
+	R.add(Run(distance=1.5, date=today - timedelta(days=2)))
+	RD = R.daily()
+
+	for rd in RD:
+		print(type(rd))
+		print("")
+
+	print(type(RD))

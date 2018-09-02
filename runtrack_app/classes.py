@@ -162,7 +162,7 @@ class Runs():
 				for run in self._runs:
 					if run.date > end_date:
 						break
-					elif run.date > start_date:
+					elif run.date >= start_date:
 						interval_runs.append(run)
 				return interval_runs
 
@@ -175,7 +175,7 @@ class Runs():
 		kw args:
 			self -- Runs object
 		'''
-		if len(self._runs):
+		if not self.empty():
 			return self._runs[-1]
 		else:
 			return Run()
@@ -186,7 +186,7 @@ class Runs():
 		kw args:
 			self -- Runs object
 		'''
-		if len(self._runs):
+		if not self.empty():
 			return self._runs[0]
 		else:
 			return Run()
@@ -197,7 +197,7 @@ class Runs():
 		kw args:
 			self -- Runs object
 		'''
-		if len(self._runs):
+		if not self.empty():
 			first_run = self.first()
 			for run in self._runs:
 				if run.date != first_run.date:
@@ -205,6 +205,26 @@ class Runs():
 			return True
 		else:
 			return True
+
+
+	def daily(self):
+		'''combines Runs objects together based on day
+
+		kw args:
+			self -- Runs object
+		'''
+		if self.one_day():
+			return [self]
+		else:
+			daily_runs = [Runs()]
+			current_date = self.first().date
+			for run in self._runs:
+				if run.date == current_date:
+					daily_runs[-1].add(run)
+				else:
+					daily_runs.append(Runs([run]))
+					current_date = run.date
+			return daily_runs
 
 	def sum(self):
 		'''Sums the distances of runs in the instance
