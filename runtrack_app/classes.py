@@ -53,7 +53,7 @@ class Runs():
 		sorted_runs.sort(key = lambda run: run.date)
 		return sorted_runs
 
-	def __init__(self, runs=[]):
+	def __init__(self, runs=[], date=None):
 		'''Combines runs into a sorted list
 
 		kw args:
@@ -62,7 +62,12 @@ class Runs():
 			runs -- a list of Run objects, defaults to an empty list
 		'''
 		self._runs = Runs.__sort_runs(runs)
-		self.date = date.today() if not runs else runs[0].date
+		if date:
+			self.date = date
+			if self._runs and self._runs[0].date != self.date:
+				raise ValueError("Date corresponds to earliest run")
+		else:
+			self.date = None if not self._runs else self._runs[0].date
 
 	def empty(self):
 		'''computes whether or not _runs is empty
@@ -217,8 +222,8 @@ class Runs():
 		if self.one_day():
 			return [self]
 		else:
-			daily_runs = [Runs()]
 			current_date = self.first().date
+			daily_runs = [Runs(date=current_date)]
 			for run in self._runs:
 				if run.date == current_date:
 					daily_runs[-1].add(run)
@@ -253,7 +258,7 @@ class GoalRuns():
 	public methods:
 		diff -- gets the difference between total run distance and goal
 	'''
-	def __init__(self, goal=Goal(), runs=Runs(), date=None):
+	def __init__(self, goal=Goal(distance=0), runs=Runs(), date=None):
 		'''initializes GoalRuns object
 
 		kw args:
@@ -277,29 +282,24 @@ class GoalRuns():
 		'''
 		# ensure goal, runs, and date all refer to same date
 		if date:
-			print("ONE")
 			if (goal.date and goal.date != date) or (runs.one_day() and runs.first().date != date):
 				raise ValueError("Goal, runs, and date should all have same date")
 			else:
 				self.date = date
 
 		elif goal.date and runs.empty():
-			print("TWO")
 			self.date = goal.date
 
 		elif not goal.date and (not runs.empty() and runs.one_day()):
-			print("THREE")
 			self.date = runs.first().date
 
 		elif goal.date and (not runs.empty() and runs.one_day()):
-			print("FOUR")
 			if goal.date == runs.first().date:
 				self.date = goal.date
 			else:
 				raise ValueError("Goal and Runs should have same date")
 
 		else:
-			print("HUH")
 			raise ValueError("Must define at least one kw argument")
 
 		# set remaining instance variables
@@ -362,6 +362,10 @@ class GroupGoalRuns():
 		runs_copy = deepcopy(runs)
 		runs_daily = Runs(runs_copy).daily()
 
+		for run in runs_daily:
+			print(run.date)
+			print()
+
 		# implement a variation of Merge algorithm
 		combined = []
 		goals_copy.append(Goal(date=date.max))
@@ -385,12 +389,55 @@ class GroupGoalRuns():
 		return combined
 
 	def __init__(self, goals, runs):
-		'''initializes GroupGoalRuns object
+		'''initializes GroupGoalRuns object (a list of GoalRuns objects)
 
 		kw args:
 			goals -- list of Goal objects
 
 			runs - list of Run objects
+		'''
+		# grouped goal runs
+		self._ggr = GroupGoalRuns.__combine_goals_runs(goals, runs)
+
+	def __str__(self):
+		'''converts GroupGoalRuns into string
+
+		kw args:
+			self -- GroupGoalRuns object
+		'''
+		return str(self._ggr)
+
+	def __len__(self):
+		'''gets length of GroupGoalRuns objects
+
+		kw args:
+			self -- GroupGoalRuns object
+		'''
+		return len(self._ggr)
+
+	def __getitem__(self, key):
+		'''returns item with associated self._ggr index
+
+		kw args:
+			self -- GroupGoalRuns object
+
+			key -- Integer corresponding to self._ggr index
+		'''
+		return self._ggr[key]
+
+	def sum_goals(self):
+		'''computes total goal distances
+
+		kw args:
+			self -- GroupGoalRuns object
+		'''
+		return reduce(lambda total, goalruns: total + goalruns.goal.distance, self._ggr, 0)
+
+	def sum_runs(self):
+		'''computes total run distances
+
+		kw args:
+			self -- GroupGoalRuns object
 		'''
 		pass
 
