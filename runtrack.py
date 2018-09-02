@@ -22,3 +22,7 @@ if __name__ == "__main__":
 	ggr = GroupGoalRuns(goals, runs).weekly()
 	for i in ggr:
 		print(i.longest_run())
+
+	week_ago = today - timedelta(days=6)
+	last_week_runs = Runs(runs).daily_distances_between(week_ago, today)
+	print("LLL", last_week_runs)

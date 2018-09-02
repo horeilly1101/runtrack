@@ -10,13 +10,10 @@ classes:
 	GroupGoalRunsWeekly -- subclass of GroupGoalRuns
 '''
 
-from datetime import date, datetime, timedelta
-import calendar
-import math
+from datetime import date, timedelta
 from copy import deepcopy
 from functools import reduce
 from runtrack_app.models import Run, Goal
-from flask_login import current_user, login_required
 
 class Runs():
 	'''Combines runs into a sorted list
@@ -42,6 +39,8 @@ class Runs():
 		first -- returns least recent run
 
 		one_day -- returns True if all runs on same day, false otherwise
+
+		daily_distances_between -- returns list of distance totals between two dates
 
 		sum -- returns sum of all run distances
 	'''
@@ -172,7 +171,7 @@ class Runs():
 						break
 					elif run.date >= start_date:
 						interval_runs.append(run)
-				return interval_runs
+				return Runs(interval_runs)
 
 			else:
 				return []
@@ -235,6 +234,31 @@ class Runs():
 					daily_runs.append(Runs([run]))
 					current_date = run.date
 			return daily_runs
+
+	def daily_distances_between(self, start_date, end_date):
+		'''returns a list of distances run daily in specified interval
+
+		kw args:
+			start_date -- Date object
+
+			end_date -- Date object
+		'''
+		daily_runs = self.interval(start_date, end_date).daily()
+		totals = []
+		current_date = start_date
+		i = 0
+
+		while current_date <= end_date:
+			if i < len(daily_runs) and daily_runs[i].date == current_date:
+				totals.append(daily_runs[i].sum())
+				i += 1
+
+			else:
+				totals.append(0)
+
+			current_date += timedelta(days=1)
+
+		return totals
 
 	def sum(self):
 		'''Sums the distances of runs in the instance
@@ -589,7 +613,7 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		diff = self.sum_runs() - wggr.sum_runs()
 		return (diff, diff / wggr.sum_runs())
 
-	def compare_longest_run(self, wggr):
+	def compare_longest_run(self, ggr):
 		'''
 		returns the difference and percent increase in distancs between longest
 		runs of two wggr objects
@@ -602,17 +626,31 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		diff = self.longest_run() - wggr.longest_run()
 		return (diff, diff / wggr.longest_run())
 
+def __add_dummy_weeks(combined):
+	'''adds empty lists if weeks are skipped in weekly function
+
+	kw args:
+		combined -- list of GroupGoalRunsWeekly object
+	'''
+	# last_monday = combined[0].monday
+	# for week in combined:
+	# 	if week.monday - last_monday > timedelta(days=7):
+	pass
+
 # Define method for GroupGoalRuns
-def weekly(self):
+# BROKEN
+def weekly(self, dummy=False):
 	'''combines GroupGoalRuns object by week
 
 	kw args:
 		self -- GroupGoalRuns object
 	'''
+	# initialize values
 	monday = self.first_monday()
 	sunday = monday + timedelta(days=6)
 	combined, goals, runs = [], [], []
 
+	# combine the objects by week
 	for goalruns in self._ggr:
 		if goalruns.date <= sunday:
 			if goalruns.goal.distance > 0:
@@ -632,12 +670,14 @@ def weekly(self):
 	if goals or runs:
 		combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday, sunday=sunday))
 
+	# # update to current day
+	# today = date.today()
+	# while sunday < today:
+	# 	monday, sunday = monday + timedelta(days=7), sunday + timedelta(days=7)
+	# 	combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday, sunday=sunday))
+
 	return combined
 
 # Add method to class
 GroupGoalRuns.weekly = weekly
-
-
-
-
 
