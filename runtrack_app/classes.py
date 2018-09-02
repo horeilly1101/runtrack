@@ -283,6 +283,8 @@ class GoalRuns():
 			sum -- returns sum of run distances
 
 			num_runs -- returns total number of runs
+
+			add_run -- adds a run
 		'''
 		# ensure goal, runs, and date all refer to same date
 		if date:
@@ -363,6 +365,9 @@ class GroupGoalRuns():
 		goals -- list of Goal objects
 
 		runs -- list of Run objects
+
+	instance variables:
+		_ggr -- a list of GoalRuns objects
 	'''
 	def __sort_goals(goals):
 		'''static method that sorts a list of goals by date
@@ -496,41 +501,64 @@ class GroupGoalRuns():
 			first_date = self.first().date
 			return first_date - timedelta(days=first_date.weekday())
 
-	def weekly(self):
-		'''combines GroupGoalRuns object by week
+class GroupGoalRunsWeekly(GroupGoalRuns):
+	'''group goalruns objects into a list
 
-		kw args:
-			self -- GroupGoalRuns object
-		'''
-		monday = self.first_monday()
-		sunday = monday + timedelta(days=6)
-		combined, goals, runs = [], [], []
+	kw args:
+		goals -- a list of Goal objects
 
-		for goalruns in self._ggr:
-			if goalruns.date <= sunday:
-				if goalruns.goal.distance > 0:
-					goals.append(goalruns.goal)
-				runs.extend(goalruns.runs._runs)
+		runs -- a list of Run objects
 
-			elif goalruns.date > sunday:
+		monday -- a date object
 
-				# Clean up
-				monday, sunday = monday + timedelta(days=7), sunday + timedelta(days=7)
-				combined.append(GroupGoalRuns(goals=goals, runs=runs))
-				runs, goals = [], []
+		sunday -- a date object
 
-				if goalruns.goal.distance > 0:
-					goals.append(goalruns.goal)
-				runs.extend(goalruns.runs._runs)
+	instance variables:
+		_ggr -- a list of GoalRuns objects
 
-		if goals or runs:
-			combined.append(GroupGoalRuns(goals=goals, runs=runs))
+		monday -- a date object
 
-		return combined
+		sunday -- a date object
+	'''
+	def __init__(self, goals, runs, monday, sunday):
+		GroupGoalRuns.__init__(self, goals, runs)
+		self.monday = monday
+		self.sunday = sunday
 
 
+def weekly(self):
+	'''combines GroupGoalRuns object by week
 
+	kw args:
+		self -- GroupGoalRuns object
+	'''
+	monday = self.first_monday()
+	sunday = monday + timedelta(days=6)
+	combined, goals, runs = [], [], []
 
+	for goalruns in self._ggr:
+		if goalruns.date <= sunday:
+			if goalruns.goal.distance > 0:
+				goals.append(goalruns.goal)
+			runs.extend(goalruns.runs._runs)
+
+		elif goalruns.date > sunday:
+			# Clean up
+			combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday, sunday=sunday))
+			monday, sunday = monday + timedelta(days=7), sunday + timedelta(days=7)
+			runs, goals = [], []
+
+			if goalruns.goal.distance > 0:
+				goals.append(goalruns.goal)
+			runs.extend(goalruns.runs._runs)
+
+	if goals or runs:
+		combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday, sunday=sunday))
+
+	return combined
+
+# Add method to class
+GroupGoalRuns.weekly = weekly
 
 
 

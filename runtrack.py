@@ -19,7 +19,6 @@ if __name__ == "__main__":
 	for i in range(0, 14, 2):
 		goals.append(Goal(distance = 2 * i, date=today-timedelta(days=i)))
 
-	ggr = GroupGoalRuns(goals, runs)
-
-	for i in ggr.weekly()[0]:
-		print(i)
+	ggr = GroupGoalRuns(goals, runs).weekly()
+	for i in ggr:
+		print(i.monday, " ", i.sunday)
