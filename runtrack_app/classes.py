@@ -557,7 +557,9 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 
 		longest_run -- returns Run instance of the longest run
 
-		compare -- returns the difference between two wggr instances
+		compare_distance -- returns the difference in distance between two wggr instances
+
+		compare_longest_run -- returns the difference in longest runs between two wggr instances
 	'''
 	def __init__(self, goals, runs, monday, sunday):
 		GroupGoalRuns.__init__(self, goals, runs)
@@ -582,10 +584,23 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		kw args:
 			self -- a GroupGoalRunsWeekly object
 
-			ggr -- a GroupGoalRunsWeekly object
+			wggr -- a GroupGoalRunsWeekly object
 		'''
-		difference = self.sum_runs() - wggr.sum_runs()
-		return (difference, difference / wggr.sum_runs())
+		diff = self.sum_runs() - wggr.sum_runs()
+		return (diff, diff / wggr.sum_runs())
+
+	def compare_longest_run(self, wggr):
+		'''
+		returns the difference and percent increase in distancs between longest
+		runs of two wggr objects
+
+		kw args:
+			self -- a GroupGoalRunsWeekly object
+
+			wggr -- a GroupGoalRunsWeekly object
+		'''
+		diff = self.longest_run() - wggr.longest_run()
+		return (diff, diff / wggr.longest_run())
 
 # Define method for GroupGoalRuns
 def weekly(self):
