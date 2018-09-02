@@ -5,7 +5,7 @@ classes:
 
 	GoalRuns -- combines a goal and Runs object into a 2-tuple
 
-	GroupGoalRuns -- maps a date to a GoalRuns object
+	GroupGoalRuns -- combines GoalRuns objects into a list
 '''
 
 from datetime import date, datetime, timedelta
@@ -219,7 +219,9 @@ class Runs():
 		kw args:
 			self -- Runs object
 		'''
-		if self.one_day():
+		if self.empty():
+			return []
+		elif self.one_day():
 			return [self]
 		else:
 			current_date = self.first().date
@@ -279,10 +281,12 @@ class GoalRuns():
 			diff - returns difference between sum of runs and goal distances
 
 			sum -- returns sum of run distances
+
+			num_runs -- returns total number of runs
 		'''
 		# ensure goal, runs, and date all refer to same date
 		if date:
-			if (goal.date and goal.date != date) or (runs.one_day() and runs.first().date != date):
+			if (goal.date and goal.date != date) or (runs.one_day() and not runs.empty() and runs.first().date != date):
 				raise ValueError("Goal, runs, and date should all have same date")
 			else:
 				self.date = date
@@ -331,6 +335,27 @@ class GoalRuns():
 		'''
 		return self.runs.sum()
 
+	def num_runs(self):
+		'''gets total number of runs in GoalRuns object
+
+		kw args:
+			self -- GoalRuns object
+		'''
+		return len(self.runs)
+
+	def add_run(self, run):
+		'''adds a Run object to GoalRuns object
+
+		kw args:
+			self -- GoalRun object
+
+			run -- Run object
+		'''
+		if not run.date or run.date != self.date:
+			raise ValueError("Run must have same date as GoalRuns")
+		else:
+			self.runs.add(run)
+
 class GroupGoalRuns():
 	'''Combines GoalRuns objects into a list
 
@@ -362,10 +387,6 @@ class GroupGoalRuns():
 		runs_copy = deepcopy(runs)
 		runs_daily = Runs(runs_copy).daily()
 
-		for run in runs_daily:
-			print(run.date)
-			print()
-
 		# implement a variation of Merge algorithm
 		combined = []
 		goals_copy.append(Goal(date=date.max))
@@ -373,7 +394,7 @@ class GroupGoalRuns():
 
 		i = 0
 		j = 0
-		while goals_copy[i].date != date.max and runs_daily[j].date != date.max:
+		while goals_copy[i].date != date.max or runs_daily[j].date != date.max:
 			if goals_copy[i].date == runs_daily[j].date:
 				combined.append(GoalRuns(goal=goals_copy[i], runs=runs_daily[j]))
 				i, j = i + 1, j + 1
@@ -425,6 +446,15 @@ class GroupGoalRuns():
 		'''
 		return self._ggr[key]
 
+	def first(self):
+		'''gets earliest GoalRun object recorded
+
+		kw args:
+			self -- GroupGoalRun object
+		'''
+		if len(self):
+			return self._ggr[0]
+
 	def sum_goals(self):
 		'''computes total goal distances
 
@@ -440,6 +470,64 @@ class GroupGoalRuns():
 			self -- GroupGoalRuns object
 		'''
 		return reduce(lambda total, goalruns: total + goalruns.sum(), self._ggr, 0)
+
+	def longest_run(self):
+		'''returns run object of longest run
+
+		'''
+		pass
+
+	def num_runs(self):
+		'''computes total number of runs
+
+		kw args:
+			self -- GroupGoalRuns object
+		'''
+		return reduce(lambda total, goalruns: total + goalruns.num_runs(), self._ggr, 0)
+
+	def first_monday(self):
+		'''
+		computes the first day (Monday) of the first week where a GoalRun is recorded
+
+		kw args:
+			self -- GroupGoalRun object
+		'''
+		if len(self):
+			first_date = self.first().date
+			return first_date - timedelta(days=first_date.weekday())
+
+	def weekly(self):
+		'''combines GroupGoalRuns object by week
+
+		kw args:
+			self -- GroupGoalRuns object
+		'''
+		monday = self.first_monday()
+		sunday = monday + timedelta(days=6)
+		combined, goals, runs = [], [], []
+
+		for goalruns in self._ggr:
+			if goalruns.date <= sunday:
+				if goalruns.goal.distance > 0:
+					goals.append(goalruns.goal)
+				runs.extend(goalruns.runs._runs)
+
+			elif goalruns.date > sunday:
+
+				# Clean up
+				monday, sunday = monday + timedelta(days=7), sunday + timedelta(days=7)
+				combined.append(GroupGoalRuns(goals=goals, runs=runs))
+				runs, goals = [], []
+
+				if goalruns.goal.distance > 0:
+					goals.append(goalruns.goal)
+				runs.extend(goalruns.runs._runs)
+
+		if goals or runs:
+			combined.append(GroupGoalRuns(goals=goals, runs=runs))
+
+		return combined
+
 
 
 
