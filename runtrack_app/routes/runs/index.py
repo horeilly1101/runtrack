@@ -5,20 +5,6 @@ from flask_login import current_user, login_required
 from datetime import date, datetime, timedelta
 import calendar
 
-def name_weeks(monday):
-	'''names a week
-
-	kw args:
-		monday -- Date object that represents Monday
-	'''
-	sunday = monday + timedelta(days=6)
-	monday_str = calendar.month_abbr[monday.month] + " " + str(monday.day)
-	if monday.month == sunday.month:
-		return monday_str + " - " + str(sunday.day)
-	else:
-		sunday_str = calendar.month_abbr[sunday.month] + " " + str(sunday.day)
-		return monday_str + " - " + sunday_str
-
 @app.route("/")
 @app.route("/index")
 @login_required
@@ -42,7 +28,7 @@ def index():
 	alltime_runs = GroupGoalRunsWeekly.weekly_distances(alltime_ggr)
 
 	# Get alltime weekdays
-	alltime_weeks = list(map(lambda wggr: name_weeks(wggr.monday), alltime_ggr))
+	alltime_weeks = list(map(lambda wggr: wggr.name(), alltime_ggr))
 
 	# Get weekly data
 	weekly_runs = alltime_runs[-4:]

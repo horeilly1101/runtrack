@@ -11,6 +11,7 @@ classes:
 '''
 
 from datetime import date, timedelta
+import calendar
 from copy import copy
 from functools import reduce
 from runtrack_app.models import Run, Goal
@@ -641,6 +642,21 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		for gr in self._wggr:
 			runs.extend(gr.runs)
 		return runs.daily_distances_between(self.monday, self.monday + timedelta(days=6))
+
+	def name(self):
+		'''names a week
+
+		kw args:
+			self -- GroupGoalRunsWeekly object
+		'''
+		monday = self.monday
+		sunday = monday + timedelta(days=6)
+		monday_str = calendar.month_abbr[monday.month] + " " + str(monday.day)
+		if monday.month == sunday.month:
+			return monday_str + " - " + str(sunday.day)
+		else:
+			sunday_str = calendar.month_abbr[sunday.month] + " " + str(sunday.day)
+			return monday_str + " - " + sunday_str
 
 # Define methods for GroupGoalRuns
 
