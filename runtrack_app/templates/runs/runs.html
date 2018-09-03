@@ -23,14 +23,14 @@
 						</h1>
 						<br>
 						<h2 class="card-title">
-							{{ "{0:0.1f}".format(1.0) }} miles
+							{{ "{0:0.1f}".format(week.sum_runs()) }} miles
 						</h2>
-						<h3 class="card-text text-primary">/{{ "{0:0.1f}".format(1.0) }}</h3>
+						<h3 class="card-text text-primary">/{{ "{0:0.1f}".format(week.sum_goals()) }}</h3>
 					</div>
 				</div>
 				<div class="card text-center" style="background-color: #f5f5f5; border-color: #f5f5f5">
 					<ul class="list-group list-group-flush border-success">
-						<li class="list-group-item" style="background-color: #f5f5f5">Num runs</li>
+						<li class="list-group-item" style="background-color: #f5f5f5">{{ week.num_runs() }} run(s)</li>
 						<li class="list-group-item" style="background-color: #f5f5f5">
 							Increase
 						</li>
@@ -83,10 +83,10 @@
 			{# endif #}
 		-->
 			<!-- add chart scripts -->
-			{# with daily_runs = daily_run_totals, chart_id = 'chart{}'.format(loop.index0) #}
-				{# set days = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"] #}
-				{# include 'runs/scripts/_reports_chart.html' #}
-			{# endwith #}
+			{% with daily_runs = week.daily_distances(), chart_id = 'chart{}'.format(loop.index0) %}
+				{% set days = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"] %}
+				{% include 'runs/scripts/_reports_chart.html' %}
+			{% endwith %}
 		{% endfor %}
 	</div><br>
 {% endblock %}
