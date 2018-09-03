@@ -588,6 +588,8 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		compare_distance -- returns the difference in distance between two wggr instances
 
 		compare_longest_run -- returns the difference in longest runs between two wggr instances
+
+		daily_distances -- returns a list of total daily distances
 	'''
 	def __init__(self, monday, goals=[], runs=[]):
 		GroupGoalRuns.__init__(self, goals, runs)
@@ -629,6 +631,16 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		'''
 		diff = self.longest_run() - wggr.longest_run()
 		return (diff, diff / wggr.longest_run())
+
+	def daily_distances(self):
+		'''computes total distances for each day
+
+		self -- GroupGoalRunsWeekly object
+		'''
+		runs = Runs()
+		for gr in self._wggr:
+			runs.extend(gr.runs)
+		return runs.daily_distances_between(self.monday, self.monday + timedelta(days=6))
 
 # Define methods for GroupGoalRuns
 

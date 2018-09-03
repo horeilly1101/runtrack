@@ -11,14 +11,8 @@ from datetime import timedelta
 @app.route("/runs")
 @login_required
 def runs():
-	user = current_user
-	if user.runs:
-		weeks = combine_daily_and_weekly(user.runs, user.goals)[::-1]
-	else:
-		weeks = []
-
-	print("HEY")
-	print(weeks)
+	grouped_goalruns = GroupGoalRuns(goals=user.goals, runs=user.runs)
+	weeks = grouped_goalruns.weekly()
 
 	return render_template("runs/runs.html",
 		weeks=weeks,
