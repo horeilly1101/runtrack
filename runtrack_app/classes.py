@@ -393,6 +393,16 @@ class GoalRuns():
 		else:
 			self.runs.add(run)
 
+	def readable_runs(self):
+		'''returns runs in a readable string
+
+		self -- GoalRuns object
+		'''
+		str_runs = str(self.runs.first().distance)
+		for run in self.runs[1:]:
+			str_runs += " + " + str(run.distance)
+		return str_runs
+
 class GroupGoalRuns():
 	'''Combines GoalRuns objects into a list
 

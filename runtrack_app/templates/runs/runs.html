@@ -14,6 +14,18 @@
 {% block app_content %}
 	<br>
 	<div class="container text-center" style="padding-top: 0">
+		{% if not weeks %}
+		<div class="jumbotron" style="background-color: #f5f5f5; padding-top: 1em; padding-bottom: 0">
+			<div class="container">
+				<h1 class="display-3">your runs</h1>
+				<blockquote class="blockquote mb-0 card-body">
+					<p>This is where your runs and goals will be visible once you...</p>
+				</blockquote>
+				<p><a class="btn btn-success btn-lg" href="{{ url_for('add_run') }}" role="button">add a run</a> <a class="btn btn-primary btn-lg" href="{{ url_for('add_goal') }}" role="button">add a goal</a></p>
+			</div>
+		</div>
+		{% endif %}
+
 		{% for week in weeks %}
 			<div class="card-deck">
 				<div class="card" style="background-color: #f5f5f5; border-color: #f5f5f5">
@@ -45,43 +57,41 @@
 				</div>
 			</div>
 			<hr class="bg-success">
-			<!--
-			{# for loop #}
-				{# if loop.index0 % 4 == 0 #}
+			{% for gr in week %}
+				{% if loop.index0 % 4 == 0 %}
 				<div class="card-deck">
-				{# endif #}
-				{# if float(goal.distance) < sum_runs(runs) #}
+				{% endif %}
+				{% if gr.sum() >= float(gr.goal.distance) %}
 				<div class="card border-primary">
-				{# else #}
+				{% else %}
 				<div class="card border-danger">
-				{# endif #}
+				{% endif %}
 					<div class="card-body">
 						<h2 class="card-title">
-							# Miles
+							{{gr.readable_runs()}} miles
 						</h2>
-						<p class="card-text text-primary">/goal</p>
+						<p class="card-text text-primary">/{{ gr.goal.distance }}</p>
 					</div>
 					<div class="card-footer" style="background-color: #f5f5f5">
-						<p class="card-text">Date</p>
+						<p class="card-text">{{ readable_date(gr.date) }}</p>
 					</div>
 				</div>
-				{# if loop.index0 % 4 == 3 #}
+				{% if loop.index0 % 4 == 3 %}
 				</div>
 				<hr class="bg-success">
-				{# elif loop.last #}
-				{# set remaining = 4 - (loop.length % 4) #}
-				{# for i in range(remaining) #}
+				{% elif loop.last %}
+				{% set remaining = 4 - (loop.length % 4) %}
+				{% for i in range(remaining) %}
 				<div class="card" style="background-color: #f5f5f5; border-color: #f5f5f5">
 				</div>
-				{# endfor #}
+				{% endfor %}
 				</div>
 				<hr class="bg-success">
-				{# endif #}
-			{# endfor #}
-			{# if not week #}
+				{% endif %}
+			{% endfor %}
+			{% if not len(week) %}
 				No runs this week
-			{# endif #}
-		-->
+			{% endif %}
 			<!-- add chart scripts -->
 			{% with daily_runs = week.daily_distances(), chart_id = 'chart{}'.format(loop.index0) %}
 				{% set days = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"] %}
