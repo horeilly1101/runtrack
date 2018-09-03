@@ -44,10 +44,19 @@
 					<ul class="list-group list-group-flush border-success">
 						<li class="list-group-item" style="background-color: #f5f5f5">{{ week.num_runs() }} run(s)</li>
 						<li class="list-group-item" style="background-color: #f5f5f5">
-							Increase
+							{% if loop.nextitem %}
+								{% set diff, perc = week.compare_distance(loop.nextitem) %}
+								{% if perc %}
+									{{ "{0:0.1f}".format(diff) }} mile ({{ "{0:0.1f}".format(perc) }}%) increase
+								{% else %}
+									{{ "{0:0.1f}".format(diff) }} mile increase
+								{% endif %}
+							{% else %}
+								{{ "{0:0.1f}".format(week.sum_runs()) }} mile increase
+							{% endif %}
 						</li>
-						<li class="list-group-item" style="background-color: #f5f5f5">Average distance:</li>
-						<li class="list-group-item" style="background-color: #f5f5f5">Longest Run:</li>
+						<li class="list-group-item" style="background-color: #f5f5f5">Average distance: {{ "{0:0.1f}".format(week.average_run()) }} miles</li>
+						<li class="list-group-item" style="background-color: #f5f5f5">Longest Run: {{ week.longest_run().distance }} miles</li>
 					</ul>
 				</div>
 				<div class="card" style="background-color: #f5f5f5; border-color: #f5f5f5">

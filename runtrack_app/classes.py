@@ -277,6 +277,19 @@ class Runs():
 		'''
 		return max(self._runs, key=lambda run: float(run.distance))
 
+	def average(self):
+		'''computes average run distance
+
+		kw args:
+			self -- Runs object
+		'''
+		if len(self):
+			sum_runs = self.sum()
+			return float(sum_runs) / len(self)
+		else:
+			return 0
+
+
 class GoalRuns():
 	'''Combines a Goal object with a Runs object
 
@@ -601,6 +614,10 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		compare_longest_run -- returns the difference in longest runs between two wggr instances
 
 		daily_distances -- returns a list of total daily distances
+
+		name -- returns name of the week
+
+		average_run -- returns length of average run
 	'''
 	def __init__(self, monday, goals=[], runs=[]):
 		GroupGoalRuns.__init__(self, goals, runs)
@@ -641,7 +658,8 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 			wggr -- a GroupGoalRunsWeekly object
 		'''
 		diff = self.longest_run() - wggr.longest_run()
-		return (diff, diff / wggr.longest_run())
+		perc = 0 if not wggr.longest_run() else diff / wggr.longest_run()
+		return (diff, perc)
 
 	def daily_distances(self):
 		'''computes total distances for each day
@@ -667,6 +685,17 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		else:
 			sunday_str = calendar.month_abbr[sunday.month] + " " + str(sunday.day)
 			return monday_str + " - " + sunday_str
+
+	def average_run(self):
+		'''computes length of average run
+
+		kw args:
+			self -- wggr object
+		'''
+		runs = Runs()
+		for goalruns in self._wggr:
+			runs.extend(goalruns.runs)
+		return runs.average()
 
 # Define methods for GroupGoalRuns
 
