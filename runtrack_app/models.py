@@ -1,3 +1,13 @@
+'''Database Models
+
+classes:
+	User -- user model
+
+	Run -- run model
+
+	Goal -- goal model
+'''
+
 from runtrack_app import db, login
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import INTEGER, TEXT, TIMESTAMP, DATE
@@ -27,7 +37,7 @@ class Run(db.Model):
 	id = db.Column(INTEGER, primary_key=True, index=True)
 	user_id = db.Column(INTEGER, db.ForeignKey("user.id"), index=True)
 	distance = db.Column(TEXT)
-	started_at = db.Column(TIMESTAMP)
+	date = db.Column(DATE)
 
 	def __repr__(self):
 		return "<Run {} miles>".format(self.distance)

@@ -1,31 +1,33 @@
 from runtrack_app import app
 from runtrack_app.models import Run, Goal
-from runtrack_app.functions import combine_daily_and_weekly, group_runs_daily_and_weekly, \
-	sort_runs, group_runs_daily, total_daily_distances, combined_summary, \
-	combine_daily, sum_runs
+from runtrack_app.classes import *
 from flask import render_template, url_for, request
 from flask_login import current_user, login_required
-import calendar
+from calendar import day_abbr, month_name
 from datetime import timedelta
+
+def readable_date(date):
+	'''makes a date object more readable
+
+	date -- Date object
+	'''
+	return month_name[date.month] + " " + str(date.day) + ", " + str(date.year)
 
 @app.route("/runs")
 @login_required
-def runs():
+def runs(dummy=True):
 	user = current_user
-	if user.runs:
-		weeks = combine_daily_and_weekly(user.runs, user.goals)[::-1]
-	else:
-		weeks = []
 
-	print("HEY")
-	print(weeks)
+	grouped_goalruns = GroupGoalRuns(goals=user.goals, runs=user.runs)
+	weeks = grouped_goalruns.weekly()[::-1]
+
+	weekdays = list(map(lambda i: day_abbr[i], range(7)))
+
+	for wggr in weeks:
+		print(wggr.daily_distances())
 
 	return render_template("runs/runs.html",
 		weeks=weeks,
-		month_abbr=calendar.month_abbr,
-		day_abbr=calendar.day_abbr,
-		combined_summary=combined_summary,
-		max=max,
-		timedelta=timedelta,
-		sum_runs=sum_runs,
-		float=float)
+		float=float,
+		len=len,
+		readable_date=readable_date)

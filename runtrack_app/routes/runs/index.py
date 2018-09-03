@@ -1,6 +1,5 @@
 from runtrack_app import app
-from runtrack_app.functions import total_daily_distances, total_weekly_distances, \
-	sort_runs, combine_daily_and_weekly, last_goal
+from runtrack_app.classes import *
 from flask import render_template, url_for, request
 from flask_login import current_user, login_required
 from datetime import date, datetime, timedelta
@@ -12,10 +11,11 @@ import calendar
 def index():
 	user = current_user
 	today = date.today()
+	runs = Runs(user.runs)
 
-	# Get daily distances
-	daily_runs = total_daily_distances(user.runs, start_date=today - timedelta(days=6)) \
-		if user.runs else []
+	# Get last week runs distances
+	week_ago = today - timedelta(days=6)
+	daily_runs = runs.daily_distances_between(week_ago, today)
 
 	# Get last 7 weekdays
 	days = []
@@ -23,33 +23,16 @@ def index():
 		day = day_int % 7
 		days.append(calendar.day_abbr[day])
 
-	# Get weekly distances (all time)
-	alltime_runs = total_weekly_distances(user.runs) \
-		if user.runs else []
+	# Get alltime distances
+	alltime_ggr = GroupGoalRuns(user.goals, user.runs).weekly(dummy=True, at_least=4)
+	alltime_runs = GroupGoalRunsWeekly.weekly_distances(alltime_ggr)
 
-	# Get names of recorded weeks (min 4 weeks)
-	if len(alltime_runs) > 3:
-		first_date = sort_runs(user.runs)[0].started_at.date()
-		first_monday = first_date - timedelta(days=first_date.weekday())
-	else:
-		first_monday = today - timedelta(days=today.weekday() + 21)
-		alltime_runs = [0] * (4 - len(alltime_runs)) + alltime_runs
+	# Get alltime weekdays
+	alltime_weeks = list(map(lambda wggr: wggr.name(), alltime_ggr))
 
-	alltime_weeks = []
-	monday = first_monday
-	while monday <= today:
-		interval = "{} {} - ".format(calendar.month_abbr[monday.month], monday.day)
-		saturday = monday + timedelta(days=6)
-		if monday.month == saturday.month:
-			interval += str(saturday.day)
-		else:
-			interval += "{} {}".format(calendar.month_abbr[saturday.month], saturday.day)
-		alltime_weeks.append(interval)
-		monday += timedelta(days=7)
-
-	# Get running and name data for last 4 weeks
-	weeks = alltime_weeks[-4:]
+	# Get weekly data
 	weekly_runs = alltime_runs[-4:]
+	weeks = alltime_weeks[-4:]
 
 	return render_template("runs/index.html", 
 		days=days,

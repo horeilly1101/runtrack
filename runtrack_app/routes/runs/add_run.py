@@ -12,9 +12,7 @@ def add_run():
 	form = AddRunForm()
 
 	if form.validate_on_submit():
-		run = Run(distance=form.distance.data, user_id = user.id)
-		start_datetime = datetime.combine(form.start_date.data, form.start_time.data)
-		run.started_at = start_datetime
+		run = Run(distance=form.distance.data, date=form.date.data, user_id = user.id)
 		db.session.add(run)
 		db.session.commit()
 
