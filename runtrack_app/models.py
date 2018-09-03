@@ -1,3 +1,13 @@
+'''Database Models
+
+classes:
+	User -- user model
+
+	Run -- run model
+
+	Goal -- goal model
+'''
+
 from runtrack_app import db, login
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import INTEGER, TEXT, TIMESTAMP, DATE

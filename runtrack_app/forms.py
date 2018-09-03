@@ -1,3 +1,15 @@
+'''Flask-WTF forms
+
+classes:
+    LoginForm -- login form
+
+    RegistrationForm -- registration form
+
+    AddRunForm -- adds a run
+
+    AddGoalForm -- adds a goal
+'''
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, TimeField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
@@ -22,8 +34,7 @@ class RegistrationForm(FlaskForm):
 
 class AddRunForm(FlaskForm):
     distance = StringField('distance', validators=[DataRequired()])
-    start_date = DateField('Start date', validators=[DataRequired()])
-    start_time = TimeField('Start date', validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
 
 class AddGoalForm(FlaskForm):
     distance = StringField('distance', validators=[DataRequired()])

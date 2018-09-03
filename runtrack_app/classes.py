@@ -11,7 +11,7 @@ classes:
 '''
 
 from datetime import date, timedelta
-from copy import deepcopy
+from copy import copy
 from functools import reduce
 from runtrack_app.models import Run, Goal
 
@@ -50,7 +50,7 @@ class Runs():
 		kw args:
 			runs -- a list of Run objects
 		'''
-		sorted_runs = deepcopy(runs)
+		sorted_runs = copy(runs)
 		sorted_runs.sort(key = lambda run: run.date)
 		return sorted_runs
 
@@ -114,7 +114,7 @@ class Runs():
 		'''
 		# Sort inputs in nondecreasing order
 		sorted_runs = Runs.__sort_runs(runs)
-		_runs_copy = deepcopy(self._runs)
+		_runs_copy = copy(self._runs)
 
 		# Increase length of self._runs
 		self._runs = sorted_runs + _runs_copy
@@ -174,7 +174,7 @@ class Runs():
 				return Runs(interval_runs)
 
 			else:
-				return []
+				return Runs()
 
 	def last(self):
 		'''Gets the most recent run
@@ -266,7 +266,7 @@ class Runs():
 		kw args:
 			self -- Runs object
 		'''
-		return float(reduce(lambda total, run: total + run.distance, self._runs, 0))
+		return float(reduce(lambda total, run: total + float(run.distance), self._runs, 0))
 
 	def longest_run(self):
 		'''returns Run object with highest distance
@@ -274,7 +274,7 @@ class Runs():
 		kw args;
 			self -- Runs object
 		'''
-		return max(self._runs, key=lambda run: run.distance)
+		return max(self._runs, key=lambda run: float(run.distance))
 
 class GoalRuns():
 	'''Combines a Goal object with a Runs object
@@ -361,7 +361,7 @@ class GoalRuns():
 		kw args:
 			self -- GoalRuns object
 		'''
-		return self.runs.sum() - self.goal.distance
+		return self.runs.sum() - float(self.goal.distance)
 
 	def sum(self):
 		'''gets the sum of all run distances
@@ -424,7 +424,7 @@ class GroupGoalRuns():
 		kw args:
 			goals -- a list of Goal objects
 		'''
-		sorted_goals = deepcopy(goals)
+		sorted_goals = copy(goals)
 		sorted_goals.sort(key=lambda goal: goal.date)
 		return sorted_goals
 
@@ -438,7 +438,8 @@ class GroupGoalRuns():
 		'''
 		# copy inputs
 		goals_copy = GroupGoalRuns.__sort_goals(goals)
-		runs_copy = deepcopy(runs)
+		print("GOALS123", goals_copy)
+		runs_copy = copy(runs)
 		runs_daily = Runs(runs_copy).daily()
 
 		# implement a variation of Merge algorithm
@@ -463,7 +464,7 @@ class GroupGoalRuns():
 
 		return combined
 
-	def __init__(self, goals, runs):
+	def __init__(self, goals=[], runs=[]):
 		'''initializes GroupGoalRuns object (a list of GoalRuns objects)
 
 		kw args:
@@ -472,7 +473,10 @@ class GroupGoalRuns():
 			runs - list of Run objects
 		'''
 		# grouped goal runs
-		self._ggr = GroupGoalRuns.__combine_goals_runs(goals, runs)
+		if len(goals) or len(runs):
+			self._ggr = GroupGoalRuns.__combine_goals_runs(goals, runs)
+		else:
+			self._ggr = []
 
 	def __str__(self):
 		'''converts GroupGoalRuns into string
@@ -515,7 +519,7 @@ class GroupGoalRuns():
 		kw args:
 			self -- GroupGoalRuns object
 		'''
-		return reduce(lambda total, goalruns: total + goalruns.goal.distance, self._ggr, 0)
+		return reduce(lambda total, goalruns: total + float(goalruns.goal.distance), self._ggr, 0)
 
 	def sum_runs(self):
 		'''computes total run distances
@@ -585,11 +589,11 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 
 		compare_longest_run -- returns the difference in longest runs between two wggr instances
 	'''
-	def __init__(self, goals, runs, monday, sunday):
+	def __init__(self, monday, goals=[], runs=[]):
 		GroupGoalRuns.__init__(self, goals, runs)
 		self._wggr = self._ggr
 		self.monday = monday
-		self.sunday = sunday
+		self.sunday = monday + timedelta(days=6)
 
 	def longest_run(self):
 		'''returns Run object of longest run
@@ -626,58 +630,94 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 		diff = self.longest_run() - wggr.longest_run()
 		return (diff, diff / wggr.longest_run())
 
-def __add_dummy_weeks(combined):
+# Define methods for GroupGoalRuns
+
+def add_dummy_weeks(combined):
 	'''adds empty lists if weeks are skipped in weekly function
 
 	kw args:
 		combined -- list of GroupGoalRunsWeekly object
 	'''
-	# last_monday = combined[0].monday
-	# for week in combined:
-	# 	if week.monday - last_monday > timedelta(days=7):
-	pass
+	current_date = combined[0].monday
+	end_date = date.today()
 
-# Define method for GroupGoalRuns
-# BROKEN
-def weekly(self, dummy=False):
+	i = 0
+	while current_date <= end_date:
+		if i >= len(combined) or combined[i].monday > current_date:
+			combined = combined[:i] + [GroupGoalRunsWeekly(monday=current_date)] + combined[i:]
+		else:
+			i += 1
+		current_date += timedelta(days=7)
+
+	return combined
+
+def weekly(self, dummy=False, at_least=0):
 	'''combines GroupGoalRuns object by week
 
 	kw args:
 		self -- GroupGoalRuns object
+
+		dummy -- includes weeks with no runs if True
+
+		at_least -- minimum length of output
 	'''
-	# initialize values
-	monday = self.first_monday()
-	sunday = monday + timedelta(days=6)
-	combined, goals, runs = [], [], []
+	combined = []
 
-	# combine the objects by week
-	for goalruns in self._ggr:
-		if goalruns.date <= sunday:
-			if goalruns.goal.distance > 0:
-				goals.append(goalruns.goal)
-			runs.extend(goalruns.runs._runs)
+	if len(self):
+		# initialize values
+		monday = self.first_monday()
+		sunday = monday + timedelta(days=6)
+		goals, runs = [], []
 
-		elif goalruns.date > sunday:
-			# Clean up
-			combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday, sunday=sunday))
-			monday, sunday = monday + timedelta(days=7), sunday + timedelta(days=7)
-			runs, goals = [], []
+		# combine the objects by week
+		for goalruns in self._ggr:
+			if goalruns.date <= sunday:
+				if float(goalruns.goal.distance) > 0:
+					goals.append(goalruns.goal)
+				runs.extend(goalruns.runs._runs)
 
-			if goalruns.goal.distance > 0:
-				goals.append(goalruns.goal)
-			runs.extend(goalruns.runs._runs)
+			elif goalruns.date > sunday:
+				# Clean up
+				combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday))
+				monday, sunday = monday + timedelta(days=7), sunday + timedelta(days=7)
+				runs, goals = [], []
 
-	if goals or runs:
-		combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday, sunday=sunday))
+				if float(goalruns.goal.distance) > 0:
+					goals.append(goalruns.goal)
+				runs.extend(goalruns.runs._runs)
 
-	# # update to current day
-	# today = date.today()
-	# while sunday < today:
-	# 	monday, sunday = monday + timedelta(days=7), sunday + timedelta(days=7)
-	# 	combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday, sunday=sunday))
+		# add last week
+		if goals or runs:
+			combined.append(GroupGoalRunsWeekly(goals=goals, runs=runs, monday=monday))
 
-	return combined
+		if dummy:
+			combined = GroupGoalRuns.__add_dummy_weeks(combined)
 
-# Add method to class
+		while len(combined) < at_least:
+			combined = [GroupGoalRunsWeekly(monday=combined[0].monday - timedelta(days=7))] + combined
+
+		return combined
+
+	else:
+		today = date.today()
+		start_date = today - timedelta(days=today.weekday())
+
+		while len(combined) < at_least:
+			combined = [GroupGoalRunsWeekly(monday=start_date)] + combined
+			start_date -= timedelta(days=7)
+
+		return combined
+
+def weekly_distances(combined):
+	'''returns weekly total distances
+
+	kw args:
+		combined -- output of weekly (dummy=True)
+	'''
+	return list(map(lambda goalruns: goalruns.sum_runs(), combined))
+
+# Add methods to class
+GroupGoalRuns.__add_dummy_weeks = add_dummy_weeks
 GroupGoalRuns.weekly = weekly
+GroupGoalRuns.weekly_distances = weekly_distances
 
