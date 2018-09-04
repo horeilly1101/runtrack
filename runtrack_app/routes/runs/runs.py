@@ -23,9 +23,6 @@ def runs(dummy=True):
 
 	weekdays = list(map(lambda i: day_abbr[i], range(7)))
 
-	for wggr in weeks:
-		print(wggr.daily_distances())
-
 	return render_template("runs/runs.html",
 		weeks=weeks,
 		float=float,

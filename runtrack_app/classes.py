@@ -411,7 +411,7 @@ class GoalRuns():
 
 		self -- GoalRuns object
 		'''
-		str_runs = str(self.runs.first().distance)
+		str_runs = 0 if not len(self.runs) else str(self.runs.first().distance)
 		for run in self.runs[1:]:
 			str_runs += " + " + str(run.distance)
 		return str_runs
@@ -462,7 +462,6 @@ class GroupGoalRuns():
 		'''
 		# copy inputs
 		goals_copy = GroupGoalRuns.__sort_goals(goals)
-		print("GOALS123", goals_copy)
 		runs_copy = copy(runs)
 		runs_daily = Runs(runs_copy).daily()
 
