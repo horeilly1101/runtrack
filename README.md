@@ -21,7 +21,7 @@ A simple web application to help me keep track of my running distances, times, a
 $ python3 -m venv venv
 $ . venv/bin/activate
 $ pip install -r requirements.txt
-$ export FLASK_APP=runtrack.py
+$ export FLASK_APP=runserver.py
 $ flask db upgrade
 $ flask run
  ```
