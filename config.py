@@ -7,3 +7,5 @@ class Config(object):
 	DATABASE_URL = os.environ['DATABASE_URL']
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
+	# Handle logs
+	LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
