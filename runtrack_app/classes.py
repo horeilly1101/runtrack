@@ -644,7 +644,7 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 			wggr -- a GroupGoalRunsWeekly object
 		'''
 		diff = self.sum_runs() - wggr.sum_runs()
-		return (diff, diff / wggr.sum_runs())
+		return (diff, (diff * 100) / wggr.sum_runs())
 
 	def compare_longest_run(self, ggr):
 		'''
