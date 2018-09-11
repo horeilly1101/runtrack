@@ -1,4 +1,4 @@
-# runtrack(https://run-track.herokuapp.com/)
+# [runtrack](https://run-track.herokuapp.com/)
 
 A simple web application to help me keep track of my running distances, times, and goals.
 
