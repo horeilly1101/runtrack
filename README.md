@@ -12,7 +12,6 @@ A simple web application to help me keep track of my running distances, times, a
 - Bootstrap4 to handle most of the front end
 - Chart.js to generate and display graphs
 - Heroku for web hosting
-- (See all dependencies in requirements.txt)
 
 # How to run on Mac OS
 - Clone the repository.
