@@ -2,7 +2,7 @@
 
 A simple web application to help me keep track of my running distances, times, and goals.
 
-![dashboard](dashboard.png)
+![dashboard](pictures/home.png)
 
 # It uses
 - Python 3 and flask to handle most of the backend features
