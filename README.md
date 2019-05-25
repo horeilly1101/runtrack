@@ -1,4 +1,5 @@
 # runtrack
+[![Build Status](https://travis-ci.com/horeilly1101/runtrack.svg?branch=master)](https://travis-ci.com/horeilly1101/runtrack)
 
 A simple web application to help me keep track of my running distances, times, and goals.
 
