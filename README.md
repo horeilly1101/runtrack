@@ -1,5 +1,6 @@
 # runtrack
 [![Build Status](https://travis-ci.com/horeilly1101/runtrack.svg?branch=master)](https://travis-ci.com/horeilly1101/runtrack)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A simple web application to help me keep track of my running distances, times, and goals.
 
