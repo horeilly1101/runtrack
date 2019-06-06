@@ -12,7 +12,7 @@ from copy import copy
 from functools import reduce
 from runtrack_app.models import Run, Goal
 from .runs import Runs
-from .goalruns import GoalRuns
+from .gr_tuple import GRTuple
 
 class GroupGoalRuns():
 	'''Combines GoalRuns objects into a list
@@ -72,15 +72,15 @@ class GroupGoalRuns():
 		j = 0
 		while goals_copy[i].date != date.max or runs_daily[j].date != date.max:
 			if goals_copy[i].date == runs_daily[j].date:
-				combined.append(GoalRuns(goal=goals_copy[i], runs=runs_daily[j]))
+				combined.append(GRTuple(goal=goals_copy[i], runs=runs_daily[j]))
 				i, j = i + 1, j + 1
 
 			elif goals_copy[i].date < runs_daily[j].date:
-				combined.append(GoalRuns(goal=goals_copy[i]))
+				combined.append(GRTuple(goal=goals_copy[i]))
 				i += 1
 
 			else:
-				combined.append(GoalRuns(runs=runs_daily[j]))
+				combined.append(GRTuple(runs=runs_daily[j]))
 				j += 1
 
 		return combined

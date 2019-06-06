@@ -1,3 +1,3 @@
 from .runs import Runs
-from .goalruns import GoalRuns
+from .gr_tuple import GRTuple
 from .group_goal_runs import GroupGoalRuns, GroupGoalRunsWeekly
