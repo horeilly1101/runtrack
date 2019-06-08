@@ -1,12 +1,9 @@
-'''Database Models
-
-classes:
-	User -- user model
-
-	Run -- run model
-
-	Goal -- goal model
-'''
+"""
+database model classes:
+	User: user model
+	Run: run model
+	Goal: goal model
+"""
 
 from runtrack_app import db, login
 from datetime import datetime
@@ -14,7 +11,9 @@ from sqlalchemy.dialects.postgresql import INTEGER, TEXT, TIMESTAMP, DATE
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+
 class User(UserMixin, db.Model):
+	"""model that describes a user of the app"""
 	id = db.Column(INTEGER, primary_key=True, index=True)
 	email = db.Column(TEXT, unique=True)
 	name = db.Column(TEXT)
@@ -33,6 +32,7 @@ class User(UserMixin, db.Model):
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
 
+
 class Run(db.Model):
 	id = db.Column(INTEGER, primary_key=True, index=True)
 	user_id = db.Column(INTEGER, db.ForeignKey("user.id"), index=True)
@@ -42,6 +42,7 @@ class Run(db.Model):
 	def __repr__(self):
 		return "<Run {} miles>".format(self.distance)
 
+
 class Goal(db.Model):
 	id = db.Column(INTEGER, primary_key=True, index=True)
 	user_id = db.Column(INTEGER, db.ForeignKey("user.id"), index=True)
@@ -50,6 +51,7 @@ class Goal(db.Model):
 
 	def __repr__(self):
 		return "<Goal {} miles>".format(self.distance)
+
 
 @login.user_loader
 def load_user(id):

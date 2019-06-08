@@ -3,29 +3,32 @@
 import datetime
 from copy import copy
 from functools import reduce
-from runtrack_app.models import Run
+from runtrack_app.models.tables import Run
 from typing import List
 
 
 class Runs:
-	"""Combines runs into a sorted list"""
+	"""Combines main_routes into a sorted list"""
 	
 	@staticmethod
 	def _sort_runs(runs: List[Run]) -> List[Run]:
 		"""sorts a list of Run objects in nondecreasing order by date
 
-		:param runs: list of runs to be sorted by date
-		:return: sorted list of runs
+		:param runs: list of main_routes to be sorted by date
+		:return: sorted list of main_routes
 		"""
+
 		sorted_runs = copy(runs)
 		sorted_runs.sort(key=lambda run: run.date)
 		return sorted_runs
 
-	def __init__(self, runs: List[Run] = None, date: datetime.date = None):
-		"""Combines runs into a sorted list
+	def __init__(self, runs: List[Run] = None, date: datetime.date = None) -> None:
+		"""Combines main_routes into a sorted list
 
-		:param runs" a list of Run objects, defaults to an empty list
+		:param runs: a list of Run objects, defaults to an empty list
+		:param date: the date of the main_routes
 		"""
+
 		if runs is None:
 			runs = []
 
@@ -38,44 +41,45 @@ class Runs:
 		else:
 			self.date = None if not self._runs else self._runs[0].date
 
-	def empty(self):
-		"""computes whether or not _runs is empty"""
+	def empty(self) -> bool:
+		"""computes whether or not _runs is empty
+
+		:return: whether or not _runs is empty
+		"""
+
 		return False if self._runs else True
 
-	def __str__(self):
+	def __str__(self) -> str:
 		"""converts Runs object into a string
 
-		kw args:
-			self -- Runs object
+		:return: representative string
 		"""
+
 		return str(self._runs)
 
-	def __len__(self):
+	def __len__(self) -> int:
 		"""Gets length of Runs object
 
-		kw args:
-			self -- Runs object
+		:return: number of main_routes in objet
 		"""
+
 		return len(self._runs)
 
-	def __getitem__(self, key):
+	def __getitem__(self, key: int) -> Run:
 		"""returns item with associated self._runs index
 
-		kw args:
-			self -- Runs object
-
-			key -- Integer corresponding to self._runs index
+		:param key: int corresponding to self._runs index
+		:return: requested Run object
 		"""
+
 		return self._runs[key]
 
-	def add_all(self, runs):
+	def add_all(self, runs: List[Run]) -> None:
 		"""Merges a Runs object and a list of Run objects into a single Runs object
 
-		kw args:
-			self -- Runs object
-
-			runs -- a list of run objects
+		:param runs: Runs object to be merged
 		"""
+
 		# Sort inputs in nondecreasing order
 		sorted_runs = Runs._sort_runs(runs)
 		_runs_copy = copy(self._runs)
@@ -96,28 +100,24 @@ class Runs:
 				self._runs[k] = _runs_copy[j]
 				j += 1
 
-	def add(self, run):
+	def add(self, run: Run) -> None:
 		"""Adds a Run object to a Runs object
 
-		kw args:
-			self -- Runs object
-
-			run -- Run object
+		:param run: Run to be added
 		"""
+
 		self.add_all([run])
 
-	def extend(self, runs_instance):
+	def extend(self, runs_instance: "Runs") -> None:
 		"""Combines two Runs instances
 
-		kw args:
-			self -- Runs object
-
-			runs_instance -- Runs object
+		:param runs_instance: Runs object to be added
 		"""
+
 		self.add_all(runs_instance._runs)
 
 	def interval(self, start_date, end_date):
-		"""gets all runs in a time interval
+		"""gets all main_routes in a time interval
 
 		kw args:
 			start_date -- date object
@@ -177,7 +177,6 @@ class Runs:
 		else:
 			return True
 
-
 	def daily(self):
 		"""combines Runs objects together based on day
 
@@ -225,7 +224,7 @@ class Runs:
 		return totals
 
 	def sum(self):
-		"""Sums the distances of runs in the instance
+		"""Sums the distances of main_routes in the instance
 
 		kw args:
 			self -- Runs object
