@@ -2,7 +2,7 @@
 
 from flask_login import logout_user
 from runtrack_app.views.forms import LoginForm
-from runtrack_app import db
+from runtrack_app.models import db
 from flask import render_template, url_for, flash, redirect, Blueprint
 from flask_login import login_user, current_user
 from runtrack_app.views.forms import RegistrationForm

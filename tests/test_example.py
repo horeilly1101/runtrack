@@ -1,3 +1,3 @@
 def test_sample():
-	'''playing around with pytest'''
+	"""playing around with pytest"""
 	assert True

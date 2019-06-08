@@ -5,7 +5,7 @@ database model classes:
 	Goal: goal model
 """
 
-from runtrack_app import db, login
+from runtrack_app.models import db, login
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import INTEGER, TEXT, TIMESTAMP, DATE
 from werkzeug.security import generate_password_hash, check_password_hash

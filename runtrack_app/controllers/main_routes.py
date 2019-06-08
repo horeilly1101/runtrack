@@ -6,7 +6,7 @@ from calendar import day_abbr, month_name
 from flask import render_template, flash, redirect, Blueprint
 from flask_login import current_user, login_required
 
-from runtrack_app import db
+from runtrack_app.models import db
 from runtrack_app.views.forms import AddGoalForm, AddRunForm
 from runtrack_app.models.tables import Run, Goal
 from runtrack_app.models.group_goal_runs import GroupGoalRuns, GroupGoalRunsWeekly
