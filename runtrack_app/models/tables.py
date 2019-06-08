@@ -5,11 +5,13 @@ database model classes:
 	Goal: goal model
 """
 
-from runtrack_app.models import db, login
 from datetime import datetime
+
 from sqlalchemy.dialects.postgresql import INTEGER, TEXT, TIMESTAMP, DATE
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+
+from runtrack_app.models import db, login
 
 
 class User(UserMixin, db.Model):

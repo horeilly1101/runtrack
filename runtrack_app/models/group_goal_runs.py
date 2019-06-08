@@ -6,7 +6,7 @@ from copy import copy
 from functools import reduce
 from runtrack_app.models.tables import Run, Goal
 from runtrack_app.models.runs import Runs
-from runtrack_app.classes.gr_tuple import GRTuple
+from runtrack_app.models.gr_tuple import GRTuple
 
 
 class GroupGoalRuns:

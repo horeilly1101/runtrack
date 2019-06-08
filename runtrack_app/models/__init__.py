@@ -5,4 +5,4 @@ from flask_migrate import Migrate
 db = SQLAlchemy()  # instantiate the database
 migrate = Migrate()  # instantiate flask migration
 login = LoginManager()  # instantiate the login manager
-login.login_view = 'login'
+login.login_view = 'accounts.login'

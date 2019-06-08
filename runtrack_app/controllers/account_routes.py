@@ -23,7 +23,7 @@ def login():
     """route for the login page"""
 
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('accounts.index'))
 
     form = LoginForm()
 
@@ -34,7 +34,7 @@ def login():
             return redirect(url_for('login'))
 
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
+        return redirect(url_for('accounts.index'))
 
     return render_template("account_routes/login.html", form=form)
 
@@ -42,7 +42,7 @@ def login():
 @accounts.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('accounts.index'))
 
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -53,6 +53,6 @@ def register():
 
         login_user(user, remember=form.remember_me.data)
         flash("Welcome to runtrack!")
-        return redirect(url_for('index'))
+        return redirect(url_for('accounts.index'))
 
     return render_template("account_routes/register.html", form=form)

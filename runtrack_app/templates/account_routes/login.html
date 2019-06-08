@@ -3,7 +3,7 @@
 {% block styles %}
 	{{ super() }}
 	<!-- Custom styles for this template -->
-	<link href="{{ url_for('static', filename='login.css') }}" rel="stylesheet" type="text/css">
+	<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -34,7 +34,7 @@
 			</div>
 			<button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
 			<br>
-			<p>New to runtrack? <a href="{{ url_for('register') }}">Create an account.</a></p>
+			<p>New to runtrack? <a href="{{ url_for('accounts.register') }}">Create an account.</a></p>
 		</form>
 	</main>
 {% endblock %}
