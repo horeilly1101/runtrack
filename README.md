@@ -1,8 +1,8 @@
 # runtrack
+> A web application that keeps track of running distances, times, and goals.
+
 [![Build Status](https://travis-ci.com/horeilly1101/runtrack.svg?branch=master)](https://travis-ci.com/horeilly1101/runtrack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-A web application that keeps track of running distances, times, and goals.
 
 ![dashboard](pictures/home.png)
 
