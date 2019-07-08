@@ -4,9 +4,9 @@ from datetime import date, timedelta
 import calendar
 from copy import copy
 from functools import reduce
-from runtrack_app.models.tables import Run, Goal
-from runtrack_app.models.runs import Runs
-from runtrack_app.models.gr_tuple import GRTuple
+from runtrack.models.tables import Run, Goal
+from runtrack.models.runs import Runs
+from runtrack.models.gr_tuple import GRTuple
 
 
 class GroupGoalRuns:
@@ -30,7 +30,7 @@ class GroupGoalRuns:
 		kw args:
 			goals -- a list of Goal objects
 
-			main_routes -- a list of Run objects
+			main -- a list of Run objects
 		"""
 		# copy inputs
 		goals_copy = GroupGoalRuns.__sort_goals(goals)
@@ -65,7 +65,7 @@ class GroupGoalRuns:
 		kw args:
 			goals -- list of Goal objects
 
-			main_routes - list of Run objects
+			main - list of Run objects
 		"""
 		if goals is None:
 			goals = []
@@ -73,7 +73,7 @@ class GroupGoalRuns:
 		if runs is None:
 			runs = []
 
-		# grouped goal main_routes
+		# grouped goal main
 		if len(goals) or len(runs):
 			self._ggr = GroupGoalRuns.__combine_goals_runs(goals, runs)
 		else:
@@ -131,7 +131,7 @@ class GroupGoalRuns:
 		return reduce(lambda total, goalruns: total + goalruns.sum(), self._ggr, 0)
 
 	def num_runs(self):
-		"""computes total number of main_routes
+		"""computes total number of main
 
 		kw args:
 			self -- GroupGoalRuns object
@@ -150,7 +150,7 @@ class GroupGoalRuns:
 			return first_date - timedelta(days=first_date.weekday())
 
 	def diff(self):
-		"""returns difference between total main_routes and total goals
+		"""returns difference between total main and total goals
 
 		kw args:
 			self -- GroupGoalRuns object
@@ -205,7 +205,7 @@ class GroupGoalRunsWeekly(GroupGoalRuns):
 	def compare_longest_run(self, wggr):
 		"""
 		returns the difference and percent increase in distancs between longest
-		main_routes of two wggr objects
+		main of two wggr objects
 
 		kw args:
 			self -- a GroupGoalRunsWeekly object
@@ -281,7 +281,7 @@ def weekly(self, dummy=False, at_least=0):
 	kw args:
 		self -- GroupGoalRuns object
 
-		dummy -- includes weeks with no main_routes if True
+		dummy -- includes weeks with no main if True
 
 		at_least -- minimum length of output
 	"""

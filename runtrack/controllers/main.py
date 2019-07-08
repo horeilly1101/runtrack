@@ -1,4 +1,4 @@
-"""controllers that deal with a user's main_routes"""
+"""controllers that deal with a user's main"""
 
 from datetime import date, timedelta
 from calendar import day_abbr, month_name
@@ -6,13 +6,13 @@ from calendar import day_abbr, month_name
 from flask import render_template, flash, redirect, Blueprint
 from flask_login import current_user, login_required
 
-from runtrack_app.models import db
-from runtrack_app.views.forms import AddGoalForm, AddRunForm
-from runtrack_app.models.tables import Run, Goal
-from runtrack_app.models.group_goal_runs import GroupGoalRuns, GroupGoalRunsWeekly
-from runtrack_app.models.runs import Runs
+from runtrack.models import db
+from runtrack.views.forms import AddGoalForm, AddRunForm
+from runtrack.models.tables import Run, Goal
+from runtrack.models.group_goal_runs import GroupGoalRuns, GroupGoalRunsWeekly
+from runtrack.models.runs import Runs
 
-main = Blueprint("main_routes", __name__)
+main = Blueprint("main", __name__)
 
 
 def readable_date(input_date):
@@ -28,12 +28,12 @@ def readable_date(input_date):
 @main.route("/index")
 @login_required
 def index():
-    """index page for the main_routes section of the app."""
+    """index page for the main section of the app."""
     user = current_user
     today = date.today()
     new_runs = Runs(user.runs)
 
-    # Get last week main_routes distances
+    # Get last week main distances
     week_ago = today - timedelta(days=6)
     daily_runs = new_runs.daily_distances_between(week_ago, today)
 
@@ -54,7 +54,7 @@ def index():
     weekly_runs = alltime_runs[-4:]
     weeks = alltime_weeks[-4:]
 
-    return render_template("main_routes/index.html", days=days, daily_runs=daily_runs, weeks=weeks,
+    return render_template("main/index.html", days=days, daily_runs=daily_runs, weeks=weeks,
                            weekly_runs=weekly_runs, alltime_weeks=alltime_weeks, alltime_runs=alltime_runs)
 
 
@@ -78,8 +78,8 @@ def add_goal():
             db.session.commit()
             flash('Your goal has been updated!')
 
-        return redirect('main_routes')
-    return render_template("main_routes/add_goal.html", form=form)
+        return redirect('main')
+    return render_template("main/add_goal.html", form=form)
 
 
 @main.route("/add_run", methods=["GET", "POST"])
@@ -95,11 +95,11 @@ def add_run():
         db.session.commit()
 
         flash('Your run has been added!')
-        return redirect('main_routes')
-    return render_template("main_routes/add_run.html", form=form)
+        return redirect('main')
+    return render_template("main/add_run.html", form=form)
 
 
-@main.route("/main_routes")
+@main.route("/main")
 @login_required
 def runs():
     """Route that displays a users running data"""
@@ -110,4 +110,4 @@ def runs():
 
     # weekdays = list(map(lambda i: day_abbr[i], range(7)))
 
-    return render_template("main_routes/runs.html", weeks=weeks, float=float, len=len, readable_date=readable_date)
+    return render_template("main/runs.html", weeks=weeks, float=float, len=len, readable_date=readable_date)

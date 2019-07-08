@@ -11,7 +11,7 @@ from sqlalchemy.dialects.postgresql import INTEGER, TEXT, TIMESTAMP, DATE
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-from runtrack_app.models import db, login
+from runtrack.models import db, login
 
 
 class User(UserMixin, db.Model):

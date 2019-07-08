@@ -104,7 +104,7 @@
 			<!-- add chart scripts -->
 			{% with daily_runs = week.daily_distances(), chart_id = 'chart{}'.format(loop.index0) %}
 				{% set days = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"] %}
-				{% include 'main_routes/scripts/_reports_chart.html' %}
+				{% include 'main/scripts/_reports_chart.html' %}
 			{% endwith %}
 		{% endfor %}
 	</div><br>

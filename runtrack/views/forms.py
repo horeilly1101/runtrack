@@ -9,7 +9,7 @@ Contains form classes:
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from runtrack_app.models.tables import User
+from runtrack.models.tables import User
 
 
 class LoginForm(FlaskForm):
@@ -30,7 +30,6 @@ class RegistrationForm(FlaskForm):
     @staticmethod
     def validate_email(email):
         """validate the email field of the RegistrationForm
-
         :param email: email input by user
         """
         user = User.query.filter_by(email=email.data).first()
