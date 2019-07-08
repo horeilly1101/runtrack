@@ -1,7 +1,7 @@
 """Contains GoalRuns class"""
 
-from runtrack_app.models.tables import Goal
-from runtrack_app.models.runs import Runs
+from runtrack.models.tables import Goal
+from runtrack.models.runs import Runs
 import datetime
 
 
@@ -10,16 +10,16 @@ class GRTuple:
 
 	def __init__(self, goal: Goal = Goal(distance=0), runs: Runs = Runs(), date: datetime.date = None) -> None:
 		"""
-		initialize the object. We assume that the goal and the main_routes are all on the same day.
+		initialize the object. We assume that the goal and the main are all on the same day.
 		:param goal: the goal to be stored
-		:param runs: the main_routes to be stored
-		:param date: the date associated with the goals and main_routes (defaults to None)
+		:param runs: the main to be stored
+		:param date: the date associated with the goals and main (defaults to None)
 		"""
 
-		# ensure goal, main_routes, and date all refer to same date
+		# ensure goal, main, and date all refer to same date
 		if date:
 			if (goal.date and goal.date != date) or (runs.one_day() and not runs.empty() and runs.first().date != date):
-				raise ValueError("Goal, main_routes, and date should all have same date")
+				raise ValueError("Goal, main, and date should all have same date")
 			else:
 				self.date = date
 
@@ -58,7 +58,7 @@ class GRTuple:
 		return self.runs.sum()
 
 	def num_runs(self) -> int:
-		"""gets total number of main_routes in GoalRuns object"""
+		"""gets total number of main in GoalRuns object"""
 
 		return len(self.runs)
 
@@ -71,7 +71,7 @@ class GRTuple:
 		self.runs.add(run)
 
 	def readable_runs(self) -> str:
-		"""returns main_routes in a readable string"""
+		"""returns main in a readable string"""
 
 		str_runs = 0 if not len(self.runs) else str(self.runs.first().distance)
 		for run in self.runs[1:]:

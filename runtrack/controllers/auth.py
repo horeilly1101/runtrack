@@ -1,27 +1,27 @@
 """Contains controllers that deal with user accounts"""
 
 from flask_login import logout_user
-from runtrack_app.views.forms import LoginForm
-from runtrack_app.models import db
+from runtrack.views.forms import LoginForm
+from runtrack.models import db
 from flask import render_template, url_for, flash, redirect, Blueprint
 from flask_login import login_user, current_user
-from runtrack_app.views.forms import RegistrationForm
-from runtrack_app.models.tables import User
+from runtrack.views.forms import RegistrationForm
+from runtrack.models.tables import User
 
-accounts = Blueprint("accounts", __name__)
+# blue print to handle authentication
+auth = Blueprint("accounts", __name__)
 
 
-@accounts.route('/logout')
+@auth.route('/logout')
 def logout():
     """route for the logout page. Logs a user out of their account."""
     logout_user()
     return redirect(url_for('login'))
 
 
-@accounts.route("/login", methods=["GET", "POST"])
+@auth.route("/login", methods=["GET", "POST"])
 def login():
     """route for the login page"""
-
     if current_user.is_authenticated:
         return redirect(url_for('accounts.index'))
 
@@ -36,11 +36,12 @@ def login():
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('accounts.index'))
 
-    return render_template("account_routes/login.html", form=form)
+    return render_template("auth/login.html", form=form)
 
 
-@accounts.route("/register", methods=["GET", "POST"])
+@auth.route("/register", methods=["GET", "POST"])
 def register():
+    """route for the register page"""
     if current_user.is_authenticated:
         return redirect(url_for('accounts.index'))
 
@@ -55,4 +56,4 @@ def register():
         flash("Welcome to runtrack!")
         return redirect(url_for('accounts.index'))
 
-    return render_template("account_routes/register.html", form=form)
+    return render_template("auth/register.html", form=form)

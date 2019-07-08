@@ -3,19 +3,19 @@
 import datetime
 from copy import copy
 from functools import reduce
-from runtrack_app.models.tables import Run
+from runtrack.models.tables import Run
 from typing import List
 
 
 class Runs:
-	"""Combines main_routes into a sorted list"""
+	"""Combines main into a sorted list"""
 	
 	@staticmethod
 	def _sort_runs(runs: List[Run]) -> List[Run]:
 		"""sorts a list of Run objects in nondecreasing order by date
 
-		:param runs: list of main_routes to be sorted by date
-		:return: sorted list of main_routes
+		:param runs: list of main to be sorted by date
+		:return: sorted list of main
 		"""
 
 		sorted_runs = copy(runs)
@@ -23,10 +23,10 @@ class Runs:
 		return sorted_runs
 
 	def __init__(self, runs: List[Run] = None, date: datetime.date = None) -> None:
-		"""Combines main_routes into a sorted list
+		"""Combines main into a sorted list
 
 		:param runs: a list of Run objects, defaults to an empty list
-		:param date: the date of the main_routes
+		:param date: the date of the main
 		"""
 
 		if runs is None:
@@ -60,7 +60,7 @@ class Runs:
 	def __len__(self) -> int:
 		"""Gets length of Runs object
 
-		:return: number of main_routes in objet
+		:return: number of main in objet
 		"""
 
 		return len(self._runs)
@@ -117,7 +117,7 @@ class Runs:
 		self.add_all(runs_instance._runs)
 
 	def interval(self, start_date, end_date):
-		"""gets all main_routes in a time interval
+		"""gets all main in a time interval
 
 		kw args:
 			start_date -- date object
@@ -224,7 +224,7 @@ class Runs:
 		return totals
 
 	def sum(self):
-		"""Sums the distances of main_routes in the instance
+		"""Sums the distances of main in the instance
 
 		kw args:
 			self -- Runs object
