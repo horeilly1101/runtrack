@@ -12,8 +12,8 @@ Flask-WTF==0.14.2
 funcsigs==1.0.2
 idna==2.8
 itsdangerous==0.24
-Jinja2==2.10
-Mako==1.0.7
+Jinja2==2.11.3
+Mako==1.2.2
 MarkupSafe==1.0
 more-itertools==4.3.0
 numpy==1.15.4
@@ -30,5 +30,5 @@ six==1.11.0
 SQLAlchemy==1.2.11
 termcolor==1.1.0
 urllib3==1.24.1
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 WTForms==2.2.1
