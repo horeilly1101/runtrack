@@ -10,7 +10,7 @@ Flask-Migrate==2.2.1
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==0.14.2
 funcsigs==1.0.2
-idna==2.8
+idna==3.7
 itsdangerous==0.24
 Jinja2==2.10
 Mako==1.0.7
